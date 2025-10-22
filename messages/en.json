@@ -1,118 +1,114 @@
 {
   "Nav": {
     "home": "Home",
-    "text-to-image": "Text to Image",
+    "text-to-image": "Create Card",
     "logOut": "Log Out",
     "login": "Sign In",
-    "dashboard": "My Workspace",
+    "dashboard": "My Cards",
     "pricing": "Pricing",
-    "create": "Create a Video",
-    "generator": "Video Generator"
+    "create": "Create a Card",
+    "generator": "Card Generator"
   },
   "HomePage": {
     "seo": {
-      "title": "AI Video Generator | Premier AI Video Generation Platform",
-      "description": "AI Video Generator is a leading AI platform that uses advanced artificial intelligence technology to craft personalized videos."
+      "title": "Birthday Card Generator | Create Unique AI Birthday Cards in Minutes",
+      "description": "Create personalized birthday cards with AI in just 3 minutes. No design skills needed. Perfect for friends, family, and colleagues."
     },
     "top": {
-      "subTitle": "AI Video Generator",
-      "description": "AI Video Generator empowers anyone to create expressive videos from simple text or images. Whether it's a romantic moment or a playful memory, let our AI bring your vision to life—no editing skills needed.",
-      "button1": "Try AI Video Generator for Free",
-      "button2": "View Subscription Options"
+      "subTitle": "Create Unique Birthday Cards in 3 Minutes",
+      "description": "No design skills needed. Powered by AI. Perfect for all ages. Make every birthday wish special with personalized cards that truly stand out.",
+      "button1": "Start Creating for Free",
+      "button2": "Browse Templates"
     },
     "userExample": {
-      "title": "Real Videos from Real Users",
-      "description": "Discover how creators are turning static images into meaningful motion with AI Video Generator."
+      "title": "Real Birthday Cards from Real Users",
+      "description": "See how people are creating heartfelt birthday wishes with our AI-powered card generator."
     },
-    "testimonials-slogan": "Join thousands of users creating unforgettable videos with AI Video Generator.",
+    "testimonials-slogan": "Join thousands creating heartfelt birthday wishes with Birthday Card Generator.",
     "what": {
-      "title": "What Is AI Video Generator?",
-      "description": "An AI-powered platform that transforms still images or text prompts into animated, emotionally rich videos.",
-      "itemTitle1": "Emotion-Driven Animation",
-      "itemDescription1": "Infuse life into your favorite photos with authentic, expressive animations.",
-      "itemTitle2": "Effortless Workflow",
-      "itemDescription2": "Upload an image, describe your idea—our AI handles the rest in minutes.",
-      "itemTitle3": "Crisp, Professional Output",
-      "itemDescription3": "Export high-resolution videos that are social-media ready.",
-      "itemTitle4": "No Editing Experience Needed",
-      "itemDescription4": "Designed for anyone—no tech or creative background required."
+      "title": "What Is Birthday Card Generator?",
+      "description": "An AI-powered platform that creates unique, personalized birthday cards in minutes—designed for everyone from 18 to 80 years old.",
+      "itemTitle1": "AI-Powered Creativity",
+      "itemDescription1": "Generate unique birthday card designs tailored to your style and message.",
+      "itemTitle2": "Extremely Easy to Use",
+      "itemDescription2": "Choose a style, add your message—done in 3 minutes. No design skills needed.",
+      "itemTitle3": "High-Quality Downloads",
+      "itemDescription3": "Get beautiful, print-ready cards perfect for sharing online or in person.",
+      "itemTitle4": "Perfect for All Ages",
+      "itemDescription4": "Whether you're 25 or 75, our simple interface makes creating cards a breeze."
     },
     "how": {
-      "title": "How to Create Your First AI Video Generator Video",
-      "description": "Make stunning AI videos in three simple steps:",
-      "item1": "Choose a clear, well-lit photo or enter a text prompt.",
-      "item2": "Describe the mood or style you want—romantic, cinematic, surreal, etc.",
-      "item3": "Let the AI animate your story into a video.",
+      "title": "How to Create Your First Birthday Card",
+      "description": "Make beautiful birthday cards in three simple steps:",
+      "item1": "1. Choose Your Style: Pick from Warm, Funny, Formal, or Cute designs.",
+      "item2": "2. Add Your Message: Select from 50+ preset greetings or write your own.",
+      "item3": "3. Download & Share: Get your unique card and share it instantly!",
       "button": "Start Creating Now"
     },
     "testimonials": {
       "title": "What Our Users Say",
-      "description": "See how AI Video Generator has helped people turn their imagination into moving stories."
+      "description": "See how Birthday Card Generator has helped people create heartfelt birthday wishes."
     },
     "FAQ": {
       "title": "Frequently Asked Questions",
-      "Q1": "How do I begin making my first video with AI Video Generator?",
-      "A1": "Simply click 'Upload', choose a photo or enter a prompt, and let our AI generate your video. The clearer your input, the better your result.",
-      "Q2": "Can I control the animation style?",
-      "A2": "Yes! Just describe the mood or theme you want—our AI adapts accordingly to match your vision.",
-      "Q3": "What's included in the free trial?",
-      "A3": "You'll receive 5 free credits to explore different animation styles and generate multiple videos. Each creation uses one credit.",
-      "Q4": "How do I cancel my subscription?",
-      "A4": "Email our support team at support@ai-videogenerator.app. Your plan will remain active until the end of your billing period—no additional charges or hidden fees.",
-      "Q5": "What billing plans are available?",
-      "A5": "We offer flexible monthly and discounted annual subscriptions. You can also buy additional credits as needed.",
-      "Q6": "Which plan offers the best value?",
-      "A6": "Our annual plan offers the best price per credit. Perfect for regular creators looking to maximize output at a lower cost."
+      "Q1": "How do I create my first birthday card?",
+      "A1": "Simply choose a style, add your message (or pick from our preset greetings), and click generate. Your unique card will be ready in about 30 seconds!",
+      "Q2": "Is it really free?",
+      "A2": "Yes! You can create 1 free card per day. For unlimited creations, check out our premium plans.",
+      "Q3": "Do I need design skills?",
+      "A3": "Not at all! Our tool is designed for everyone, including those who have never used design software. If you can type a message, you can create a card.",
+      "Q4": "Can I use the cards commercially?",
+      "A4": "Free cards are for personal use. Premium subscribers get commercial usage rights. Check our Terms of Service for details.",
+      "Q5": "What image quality do I get?",
+      "A5": "All cards are generated in high resolution (1080x1080px), perfect for social media sharing or printing.",
+      "Q6": "Can I save my created cards?",
+      "A6": "Yes! Sign in to save your card history and re-download any card you've created."
     },
     "Features": {
-      "heading": "Powerful Features to Fuel Your Creativity",
-      "subheading": "Make AI videos that feel personal, dynamic, and share-worthy.",
+      "heading": "Features Designed for Everyone",
+      "subheading": "Create birthday cards that feel personal, unique, and heartfelt.",
       "feature1": {
-        "title": "Realistic AI Animation",
-        "description": "Turn static photos into vibrant video scenes that feel alive."
+        "title": "AI-Powered Design",
+        "description": "Every card is uniquely generated by AI, so no two cards are exactly alike."
       },
       "feature2": {
-        "title": "Prompt-Based Personalization",
-        "description": "Write your scene, style, or emotion—our AI interprets and animates it."
+        "title": "4 Beautiful Styles",
+        "description": "Choose from Warm, Funny, Formal, or Cute styles to match any personality."
       },
       "feature3": {
-        "title": "High-Resolution Exports",
-        "description": "Download full-quality videos ready to post, share, or keep forever."
+        "title": "50+ Preset Messages",
+        "description": "Pick from carefully crafted birthday wishes or write your own personal message."
       },
       "feature4": {
-        "title": "Intuitive Creation Process",
-        "description": "No timeline, no tools—just you and your imagination."
+        "title": "Extremely Simple",
+        "description": "3-minute creation process. Perfect for users of all ages and tech levels."
       },
       "feature5": {
-        "title": "Instant Sharing",
-        "description": "Easily download or share your videos across platforms."
+        "title": "Instant Download",
+        "description": "Get your card in high-res PNG format, ready to share or print."
       },
       "feature6": {
-        "title": "Privacy & Data Protection",
-        "description": "We safeguard your content with industry-grade encryption and access controls."
+        "title": "Privacy First",
+        "description": "Your messages and cards are private. We never share your content."
       }
     },
     "generator": {
       "input": {
-        "title": "AI Video Generator",
-        "text-to-video": "AI Video Generator 1.0 Pro (Text to Video)",
-        "img-to-video": "AI Video Generator 1.0 Pro (Image to Video)",
-        "description": "Instantly generate creative, animated videos from photos or text prompts. Just upload, describe, and let AI do the magic.",
-        "createButton": "Generate Video",
-        "upload": "Upload a Photo",
-        "upload-tips": "Click to upload a image",
-        "promptTips": "Enter a prompt here"
+        "title": "Birthday Card Generator",
+        "description": "Create unique, AI-generated birthday cards in minutes. Choose a style, add your message, and download instantly!",
+        "createButton": "Generate Card",
+        "promptTips": "Enter your birthday message here (or choose from presets below)"
       },
       "output": {
-        "title": "Your AI-Generated Video",
-        "unGeneratedTip": "No video yet – get started above!",
-        "downloadButton": "Download Your Video"
+        "title": "Your Birthday Card",
+        "unGeneratedTip": "Your beautiful card will appear here!",
+        "downloadButton": "Download Card"
       }
     },
     "cta": {
-      "title": "Turn Your Moments into Moving Stories",
-      "description": "AI Video Generator helps you transform everyday moments into cinematic animations using the power of artificial intelligence.",
-      "cta": "Create Your First Video Now"
+      "title": "Make Every Birthday Wish Unique",
+      "description": "Birthday Card Generator helps you create heartfelt, personalized birthday cards using the power of artificial intelligence. Start for free today!",
+      "cta": "Create Your First Card Now"
     }
   },
   "Pricing": {
@@ -148,17 +144,45 @@
   },
   "TextToImage": {
     "seo": {
-      "title": "AI Image Generator | Premier AI Image Generation Platform",
-      "description": "AI Image Generator is a leading AI platform that uses advanced artificial intelligence technology to craft personalized images."
+      "title": "Create Birthday Card | AI Birthday Card Generator",
+      "description": "Create personalized birthday cards with AI. Choose from 4 styles, add your message, and download in seconds. Free to start!"
     },
     "top": {
-      "subTitle": "AI Image Generator",
-      "description": "AI Image Generator is a leading AI platform that uses advanced artificial intelligence technology to craft personalized images."
+      "subTitle": "AI Birthday Card Generator",
+      "description": "Create unique, personalized birthday cards powered by AI. Perfect for friends, family, and colleagues. No design skills needed!"
     },
     "input": {
-      "title": "AI Image Generator",
-      "upload": "Upload a Photo",
-      "description": "AI Image Generator is a leading AI platform that uses advanced artificial intelligence technology to craft personalized images."
+      "title": "Birthday Card Generator",
+      "description": "Choose a style, add your personal message, and let AI create a beautiful birthday card for you."
+    },
+    "styles": {
+      "title": "Choose Your Style",
+      "warm": {
+        "title": "Warm & Cozy",
+        "description": "Perfect for family and close friends"
+      },
+      "funny": {
+        "title": "Funny & Playful",
+        "description": "Bring a smile with cheerful designs"
+      },
+      "formal": {
+        "title": "Formal & Elegant",
+        "description": "Professional birthday wishes"
+      },
+      "cute": {
+        "title": "Cute & Adorable",
+        "description": "Sweet and charming for loved ones"
+      }
+    },
+    "presets": {
+      "title": "Choose a Preset Message",
+      "subtitle": "Or write your own below",
+      "categories": {
+        "friends": "Friends",
+        "family": "Family",
+        "colleagues": "Colleagues",
+        "general": "General"
+      }
     }
   },
 
