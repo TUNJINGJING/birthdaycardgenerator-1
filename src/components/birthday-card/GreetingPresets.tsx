@@ -6,7 +6,7 @@ import {
   greetingPresets,
   getGreetingsByCategory,
   type GreetingCategory,
-} from "./greetingPresets";
+} from "./greetingPresetsData";
 
 interface GreetingPresetsProps {
   onSelectGreeting: (greeting: string) => void;

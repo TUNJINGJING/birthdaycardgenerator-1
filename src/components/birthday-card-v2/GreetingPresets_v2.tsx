@@ -6,7 +6,7 @@ import {
   greetingPresets,
   getGreetingsByCategory,
   type GreetingCategory,
-} from "../birthday-card/greetingPresets";
+} from "../birthday-card/greetingPresetsData";
 import "./styles.css";
 
 interface GreetingPresetsProps {
