@@ -115,7 +115,27 @@ export default function Worker(props: {
           credit: props.credit,
         }),
       });
-      newPrediction = await response.json();
+
+      // Check if response is valid before parsing JSON
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API response error:", response.status, errorText);
+        throw new Error(`API error: ${response.status} - ${errorText}`);
+      }
+
+      // Check if response body exists before parsing JSON
+      const responseText = await response.text();
+      if (!responseText) {
+        throw new Error("Empty response from server");
+      }
+
+      try {
+        newPrediction = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error("JSON parsing error:", jsonError, "Response text:", responseText);
+        throw new Error("Invalid JSON response from server");
+      }
+
       const canContinue = await handleApiErrors({
         response,
         newPrediction,
@@ -128,7 +148,7 @@ export default function Worker(props: {
       setPrediction(newPrediction);
     } catch (error) {
       console.error("Error generating card:", error);
-      toast.error("An error occurred while generating the card.");
+      toast.error(`Failed to generate card: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setGenerating(false);
       return;
     }
@@ -139,14 +159,40 @@ export default function Worker(props: {
       newPrediction.status !== "failed"
     ) {
       await sleep(1500);
-      const response = await fetch("/api/predictions/" + newPrediction.id);
-      newPrediction = await response.json();
-      if (response.status !== 200) {
-        setError(newPrediction.detail);
+      try {
+        const response = await fetch("/api/predictions/" + newPrediction.id);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Status check error:", response.status, errorText);
+          setError(`API error: ${response.status}`);
+          setGenerating(false);
+          return;
+        }
+
+        const responseText = await response.text();
+        if (!responseText) {
+          setError("Empty response from server");
+          setGenerating(false);
+          return;
+        }
+
+        try {
+          newPrediction = JSON.parse(responseText);
+        } catch (jsonError) {
+          console.error("JSON parsing error in polling:", jsonError, "Response text:", responseText);
+          setError("Invalid response format from server");
+          setGenerating(false);
+          return;
+        }
+
+        setPrediction(newPrediction);
+      } catch (error) {
+        console.error("Error checking prediction status:", error);
+        setError(`Failed to check status: ${error instanceof Error ? error.message : 'Unknown error'}`);
         setGenerating(false);
         return;
       }
-      setPrediction(newPrediction);
     }
     // update effect result
     const runningTime =
