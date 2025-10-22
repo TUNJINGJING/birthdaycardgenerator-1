@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Heart, Smile, Briefcase, Sparkles } from "lucide-react";
-import styles from "./styles.module.css";
+import "./styles.css";
 
 export type CardStyle = "warm" | "funny" | "formal" | "cute";
 
@@ -29,11 +29,11 @@ export default function StyleSelector_v2({
   const t = useTranslations("TextToImage.styles");
 
   return (
-    <div className={styles["v2-section-spacing"]}>
-      <label className={styles["v2-section-label"]}>
+    <div className="v2-section-spacing">
+      <label className="v2-section-label">
         {t("title")}
       </label>
-      <div className={styles["v2-style-grid"]}>
+      <div className="v2-style-grid">
         {styleConfigs.map((config) => {
           const Icon = config.icon;
           const isSelected = selectedStyle === config.id;
@@ -42,17 +42,13 @@ export default function StyleSelector_v2({
             <button
               key={config.id}
               onClick={() => onStyleChange(config.id)}
-              className={`
-                ${styles["v2-style-card"]}
-                ${isSelected ? styles.selected : ""}
-                ${isSelected ? styles[`selected-${config.id}`] : ""}
-              `}
+              className={`v2-style-card ${isSelected ? "selected" : ""} ${isSelected ? `selected-${config.id}` : ""}`}
               aria-pressed={isSelected}
             >
               {/* 选中指示器 */}
               {isSelected && (
                 <span
-                  className={`${styles["v2-style-indicator"]} ${styles[config.id]}`}
+                  className={`v2-style-indicator ${config.id}`}
                   aria-hidden="true"
                 />
               )}
@@ -60,15 +56,15 @@ export default function StyleSelector_v2({
               {/* 图标 */}
               <Icon
                 size={32}
-                className={`${styles["v2-style-icon"]} ${isSelected ? styles[config.id] : ""}`}
+                className={`v2-style-icon ${isSelected ? config.id : ""}`}
               />
 
               {/* 文字内容 */}
               <div>
-                <p className={styles["v2-style-title"]}>
+                <p className="v2-style-title">
                   {t(`${config.id}.title`)}
                 </p>
-                <p className={styles["v2-style-description"]}>
+                <p className="v2-style-description">
                   {t(`${config.id}.description`)}
                 </p>
               </div>

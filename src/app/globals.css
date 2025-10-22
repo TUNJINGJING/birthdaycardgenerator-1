@@ -35,6 +35,38 @@
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
+
+        /* v2 设计系统变量 */
+        --v2-primary: #0066FF;
+        --v2-text-primary: #1A1A1A;
+        --v2-text-secondary: #666666;
+        --v2-border: #E0E0E0;
+        --v2-background: #FFFFFF;
+        --v2-surface: #F5F5F5;
+        --v2-style-warm: #FF6B35;
+        --v2-style-funny: #FFD23F;
+        --v2-style-formal: #0066FF;
+        --v2-style-cute: #FF69B4;
+
+        /* v2 字体 */
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --font-mono: "SF Mono", Menlo, Monaco, monospace;
+
+        /* v2 字号 */
+        --text-xs: 12px;
+        --text-sm: 14px;
+        --text-base: 16px;
+        --text-lg: 20px;
+        --text-xl: 28px;
+        --text-2xl: 48px;
+
+        /* v2 间距 */
+        --space-1: 8px;
+        --space-2: 16px;
+        --space-3: 24px;
+        --space-4: 32px;
+        --space-6: 48px;
+        --space-8: 64px;
     }
   .dark {
         --background: 0 0% 3.9%;

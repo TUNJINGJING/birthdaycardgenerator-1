@@ -10,7 +10,7 @@ import { UserSubscriptionInfo } from "@/backend/type/domain/user_subscription_in
 import { useTranslations } from "next-intl";
 import StyleSelector_v2, { type CardStyle } from "./StyleSelector_v2";
 import GreetingPresets_v2 from "./GreetingPresets_v2";
-import styles from "./styles.module.css";
+import "./styles.css";
 import { Download } from "lucide-react";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -186,15 +186,15 @@ export default function Worker_v2(props: {
   };
 
   return (
-    <div className={`${styles["v2-container"]} ${styles["v2-main-container"]}`}>
+    <div className={`${"v2-container"} ${"v2-main-container"}`}>
       {/* 左侧：输入区 */}
-      <div className={styles["v2-input-section"]}>
-        <h2 className={styles["v2-section-title"]}>
+      <div className={"v2-input-section"}>
+        <h2 className={"v2-section-title"}>
           {t("input.title")}
         </h2>
 
         {/* Credit Info */}
-        <div className={styles["v2-credit-info"]} style={{ marginBottom: "var(--space-4)" }}>
+        <div className={"v2-credit-info"} style={{ marginBottom: "var(--space-4)" }}>
           <span>Credits:</span>
           <span>{userSubscriptionInfo?.remain_count ?? "—"}</span>
         </div>
@@ -212,32 +212,32 @@ export default function Worker_v2(props: {
         />
 
         {/* Step 3: 自定义输入 */}
-        <div className={styles["v2-section-spacing"]}>
-          <label className={styles["v2-section-label"]} htmlFor="message-input">
+        <div className={"v2-section-spacing"}>
+          <label className={"v2-section-label"} htmlFor="message-input">
             Your Message
           </label>
           <textarea
             id="message-input"
-            className={styles["v2-textarea"]}
+            className={"v2-textarea"}
             placeholder={props.promptTips || "Enter your birthday message here"}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             maxLength={200}
           />
-          <div className={styles["v2-character-count"]}>
+          <div className={"v2-character-count"}>
             {prompt.length}/200
           </div>
         </div>
 
         {/* 生成按钮 */}
         <button
-          className={styles["v2-button"]}
+          className={"v2-button"}
           onClick={handleGenerate}
           disabled={generating}
         >
           {generating ? (
             <>
-              <div className={styles["v2-button-spinner"]} />
+              <div className={"v2-button-spinner"} />
               <span>
                 {prediction
                   ? prediction.status === "succeeded"
@@ -253,20 +253,20 @@ export default function Worker_v2(props: {
       </div>
 
       {/* 分割线 */}
-      <div className={styles["v2-divider-vertical"]} />
+      <div className={"v2-divider-vertical"} />
 
       {/* 右侧：输出区 */}
-      <div className={styles["v2-output-section"]}>
-        <div className={styles["v2-output-container"]}>
+      <div className={"v2-output-section"}>
+        <div className={"v2-output-container"}>
           {prediction?.output?.[0] ? (
             <>
               <img
                 src={prediction.output[0]}
                 alt="Generated birthday card"
-                className={styles["v2-output-image"]}
+                className={"v2-output-image"}
               />
               <button
-                className={styles["v2-download-button"]}
+                className={"v2-download-button"}
                 onClick={handleDownload}
                 aria-label="Download image"
               >
@@ -277,16 +277,16 @@ export default function Worker_v2(props: {
             <img
               src={props.defaultImage}
               alt="Example birthday card"
-              className={styles["v2-output-image"]}
+              className={"v2-output-image"}
             />
           ) : (
-            <p className={styles["v2-output-placeholder"]}>
+            <p className={"v2-output-placeholder"}>
               Your birthday card will appear here
             </p>
           )}
 
           {error && (
-            <p className={styles["v2-output-placeholder"]} style={{ color: "var(--primary)" }}>
+            <p className={"v2-output-placeholder"} style={{ color: "var(--primary)" }}>
               Error: {error}
             </p>
           )}

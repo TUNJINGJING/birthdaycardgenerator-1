@@ -7,7 +7,7 @@ import {
   getGreetingsByCategory,
   type GreetingCategory,
 } from "../birthday-card/greetingPresets";
-import styles from "./styles.module.css";
+import "./styles.css";
 
 interface GreetingPresetsProps {
   onSelectGreeting: (greeting: string) => void;
@@ -32,21 +32,18 @@ export default function GreetingPresets_v2({
   const filteredGreetings = getGreetingsByCategory(selectedCategory);
 
   return (
-    <div className={styles["v2-section-spacing"]}>
-      <label className={styles["v2-section-label"]}>
+    <div className="v2-section-spacing">
+      <label className="v2-section-label">
         {t("title")}
       </label>
 
       {/* 分类标签 */}
-      <div className={styles["v2-greeting-tabs"]}>
+      <div className="v2-greeting-tabs">
         {categories.map((category) => (
           <button
             key={category}
             onClick={() => setSelectedCategory(category)}
-            className={`
-              ${styles["v2-greeting-tab"]}
-              ${selectedCategory === category ? styles.active : ""}
-            `}
+            className={`v2-greeting-tab ${selectedCategory === category ? "active" : ""}`}
             aria-pressed={selectedCategory === category}
           >
             {t(`categories.${category}`)}
@@ -55,7 +52,7 @@ export default function GreetingPresets_v2({
       </div>
 
       {/* 祝福语列表 */}
-      <div className={styles["v2-greeting-list"]}>
+      <div className="v2-greeting-list">
         {filteredGreetings.map((greeting) => {
           const isSelected = selectedGreeting === greeting.content;
 
@@ -63,10 +60,7 @@ export default function GreetingPresets_v2({
             <button
               key={greeting.id}
               onClick={() => onSelectGreeting(greeting.content)}
-              className={`
-                ${styles["v2-greeting-item"]}
-                ${isSelected ? styles.selected : ""}
-              `}
+              className={`v2-greeting-item ${isSelected ? "selected" : ""}`}
               aria-pressed={isSelected}
             >
               {greeting.content}
