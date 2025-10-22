@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Heart, Smile, Briefcase, Sparkles } from "lucide-react";
+import { Heart, Smile, Briefcase, Sparkles, type LucideIcon } from "lucide-react";
 import "./styles.css";
 
 export type CardStyle = "warm" | "funny" | "formal" | "cute";
@@ -14,7 +14,7 @@ interface StyleSelectorProps {
 
 const styleConfigs: Array<{
   id: CardStyle;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
+  icon: LucideIcon;
 }> = [
   { id: "warm", icon: Heart },
   { id: "funny", icon: Smile },
