@@ -7,7 +7,7 @@
 /* ========================================
    颜色系统（3色极简）
    ======================================== */
-:root {
+:global(:root) {
   /* 主色调 */
   --primary: #0066FF;
   --text-primary: #1A1A1A;
@@ -496,7 +496,7 @@
    Reduced Motion Support
    ======================================== */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  :global(*) {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
