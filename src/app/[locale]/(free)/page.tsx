@@ -1,4 +1,4 @@
-import WorkerWrapper from "@/components/replicate/img-to-video/worker-wraper";
+import WorkerWrapper from "@/components/replicate/text-to-image/worker-wraper";
 import TopHero from "@/components/landingpage/top";
 import What from "@/components/landingpage/what";
 import How from "@/components/landingpage/how";
@@ -40,9 +40,10 @@ export default function Home({
   const whatImage = "/resources/example3.webp";
   const howImage = "/resources/example2.webp";
 
-  const effectId = "1";
+  const effectId = "2";  // 改为使用 text-to-image 的 effect ID
   const multiLanguage = "HomePage";
-  const multiLanguageOfGenerator = "HomePage.generator";
+  const multiLanguageOfGenerator = "TextToImage";  // 使用 TextToImage 的翻译
+  const outputDefaultImage = "/resources/text-to-image.jpg";
 
   return (
     <main className="flex flex-col items-center rounded-2xl px-3 md:rounded-3xl md:px-0">
@@ -52,8 +53,8 @@ export default function Home({
       <div className="w-full flex justify-center items-center pt-3 mb-8">
         <WorkerWrapper
           effectId={effectId}
-          promotion={video}
-          lang={multiLanguageOfGenerator}
+          multiLanguage={multiLanguageOfGenerator}
+          outputDefaultImage={outputDefaultImage}
         />
       </div>
       <div className="pt-20 md:pt-40">
