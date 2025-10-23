@@ -54,12 +54,12 @@ export default function Footer({ locale }: { locale: string }) {
             <div className="flex items-center justify-center xl:justify-start">
               <img
                 src="/logo.jpeg"
-                alt="AI Video Generator"
+                alt="Birthday Card Generator"
                 className="w-8 h-8 mr-2"
                 loading="lazy"
               />
               <span className="text-medium font-medium">
-                AI Video Generator
+                Birthday Card Generator
               </span>
             </div>
             <p className="text-small text-black text-center xl:text-left">
@@ -132,7 +132,7 @@ export default function Footer({ locale }: { locale: string }) {
         <Divider className="mt-16 sm:mt-20 lg:mt-24" />
         <div className="flex justify-center pt-8">
           <p className="text-small text-black">
-            &copy; 2025 AI Video Generator. All rights reserved.
+            &copy; 2025 Birthday Card Generator. All rights reserved.
           </p>
         </div>
       </div>

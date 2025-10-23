@@ -115,29 +115,29 @@
     "title": "Flexible Pricing Plans",
     "description": "Choose the plan that fits your creative flow—whether you're a casual user or a content creator.",
     "seo": {
-      "title": "AI Video Generator Pricing – Flexible Plans for Every Creator",
-      "description": "Discover AI Video Generator's flexible pricing options designed for creators, marketers, and storytellers to generate cinematic videos with ease."
+      "title": "Birthday Card Generator Pricing – Flexible Plans for Every Need",
+      "description": "Discover Birthday Card Generator's flexible pricing options designed for personal use and celebrations. Create unlimited personalized birthday cards with ease."
     },
     "FAQ": {
       "title": "Subscription & Billing Questions",
       "Q1": "Can I cancel anytime?",
-      "A1": "Yes. Just send us an email at support@ai-videogenerator.com. Your subscription will stay active until your billing cycle ends.",
+      "A1": "Yes. Just send us an email at support@birthdaycardgenerator.com. Your subscription will stay active until your billing cycle ends.",
       "Q2": "Do you offer monthly and annual plans?",
       "A2": "Absolutely. Monthly for flexibility, annual for the best savings.",
       "Q3": "Which plan is the most cost-effective?",
-      "A3": "The annual plan gives you the lowest price per credit. It's ideal if you plan to create videos regularly.",
+      "A3": "The annual plan gives you the lowest price per credit. It's ideal if you create birthday cards regularly.",
       "Q4": "Can I switch between plans?",
       "A4": "Yes, you can upgrade or downgrade your subscription at any time.",
-      "Q5": "How do you ensure video quality?",
-      "A5": "Our AI uses advanced motion synthesis and enhancement tools. We also offer preview videos so you know what to expect.",
-      "Q6": "Is there a cap on how many videos I can create?",
-      "A6": "Each plan has a credit limit, which determines how many creations you can generate. You can always purchase more if needed.",
+      "Q5": "How do you ensure card quality?",
+      "A5": "Our AI uses advanced image generation technology. We also provide style options so you know what to expect.",
+      "Q6": "Is there a cap on how many cards I can create?",
+      "A6": "Each plan has a credit limit, which determines how many cards you can generate. You can always purchase more if needed.",
       "Q7": "What if I run out of credits?",
       "A7": "You can purchase one-time credit packs anytime. No subscription changes needed.",
       "Q8": "How do I contact support?",
-      "A8": "Reach out to our support team through live chat or email—we're here to help.",
+      "A8": "Reach out to our support team through email at support@birthdaycardgenerator.com—we're here to help.",
       "Q9": "Do I need to install anything?",
-      "A9": "Nope! AI Video Generator is completely web-based. All you need is a browser and an internet connection.",
+      "A9": "Nope! Birthday Card Generator is completely web-based. All you need is a browser and an internet connection.",
       "Q10": "Is my payment information secure?",
       "A10": "Yes—we use Stripe to handle all transactions with the highest standards in security and encryption."
     }
@@ -222,16 +222,16 @@
   },
   "Seo": {
     "home": {
-      "title": "AI Video Generator | Premier AI Video Generation Platform",
-      "description": "AI Video Generator is a leading AI platform that uses advanced artificial intelligence technology to craft personalized videos."
+      "title": "Birthday Card Generator | Create Unique AI Birthday Cards",
+      "description": "Birthday Card Generator is a leading AI platform that creates personalized birthday cards in minutes. No design skills needed—perfect for friends, family, and colleagues."
     }
   },
   "Footer": {
-    "description": "AI Video Generator is a leading platform for AI video and image creation. Offering the latest and most advanced tools to craft stunning, high-quality AI-generated visuals. Discover how AI can enhance your creativity with user-friendly features and cutting-edge technology.",
+    "description": "Birthday Card Generator is a leading platform for AI-powered birthday card creation. Create unique, personalized birthday cards in minutes with our easy-to-use tools. No design skills needed—perfect for friends, family, and colleagues.",
     "recommend": {
       "title": "Feature",
       "item": {
-        "item1": "AI Video Generator"
+        "item1": "Birthday Card Generator"
       }
     },
     "legal": {

@@ -76,7 +76,7 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
             loading="lazy"
           />
           <p className="text-2xl font-bold hidden lg:block text-blue-700">
-            AI Image Generator
+            Birthday Card Generator
           </p>
         </NavbarBrand>
 
