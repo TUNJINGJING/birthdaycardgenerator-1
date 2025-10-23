@@ -283,19 +283,22 @@ fetch("/api/predictions/text_to_image", {
 
 ## 待完成任务
 
-### P0 - 核心功能（当前阶段）
+### P0 - 核心功能（已完成 ✅）
 - ✅ Worker 组件改造
 - ✅ 样式选择器组件
 - ✅ 祝福语预设系统
 - ✅ Hero 组件更新
-- ⏳ 其他 landing page 组件更新：
-  - `what.tsx` - 产品介绍
-  - `how.tsx` - 使用步骤
-  - `feature.tsx` - 核心功能
-  - `faq.tsx` - 常见问题
-  - `cta.tsx` - 行动号召
+- ✅ 落地页组件确认（通过翻译系统自动完成）：
+  - ✅ `what.tsx` - 产品介绍
+  - ✅ `how.tsx` - 使用步骤
+  - ✅ `feature.tsx` - 核心功能
+  - ✅ `faq.tsx` - 常见问题
+  - ✅ `cta.tsx` - 行动号召
+- ✅ 构建系统修复（清理 .next 缓存）
+- ✅ Prompt 优化指南创建
+- ⏳ **当前等待**：用户使用 Gemini 测试 prompt 并反馈结果
 - ⏳ 端到端测试
-- ⏳ 数据库：插入 effect ID=2 记录
+- ⏳ 数据库：确认 effect ID=2 记录配置
 
 ### P1 - 用户体验优化
 - ⏳ Dashboard 简化
@@ -327,16 +330,31 @@ fetch("/api/predictions/text_to_image", {
 ### 新增文件
 - `src/components/birthday-card/StyleSelector.tsx` - 样式选择器组件 (111 行)
 - `src/components/birthday-card/GreetingPresets.tsx` - 祝福语预设展示组件 (92 行)
-- `src/components/birthday-card/greetingPresets.ts` - 祝福语数据层 (234 行)
+- `src/components/birthday-card/greetingPresetsData.ts` - 祝福语数据层 (234 行)
+- `PROMPT_OPTIMIZATION_GUIDE.md` - Prompt 优化测试指南 (327 行)
 
 ### 修改文件
 - `src/components/replicate/text-to-image/worker.tsx` - Worker 主组件重构 (273 行)
 - `src/components/landingpage/top.tsx` - Hero 区域更新 (48 行)
-- `messages/en.json` - 国际化文本全面更新
+- `messages/en.json` - 国际化文本全面更新（已包含所有落地页内容）
+- `IMPLEMENTATION_PROGRESS.md` - 项目进度文档（持续更新）
+
+### 已验证文件（无需修改）
+- `src/components/landingpage/what.tsx` - 通过翻译系统自动显示生日卡片内容
+- `src/components/landingpage/how.tsx` - 通过翻译系统自动显示生日卡片内容
+- `src/components/landingpage/feature.tsx` - 通过翻译系统自动显示生日卡片内容
+- `src/components/landingpage/faq.tsx` - 通过翻译系统自动显示生日卡片内容
+- `src/components/landingpage/cta.tsx` - 通过翻译系统自动显示生日卡片内容
 
 ### 删除文件（阶段 1）
 - `src/components/replicate/img-to-video/` - 整个文件夹
 - `src/app/api/predictions/img_to_video/route.ts` - 视频生成 API
+
+### 删除文件（阶段 3 - v2 设计废弃）
+- `src/components/birthday-card-v2/` - 整个 v2 文件夹
+- `src/components/landingpage-v2/` - 整个 v2 文件夹
+- `src/app/[locale]/(free)/text-to-image-v2/` - v2 页面
+- `DESIGN_REFRESH_PLAN.md` - v2 设计方案文档
 
 ---
 
@@ -413,22 +431,203 @@ setSelectedStyle("invalid"); // ❌ 类型错误
 
 ## 更新日志
 
-### 2025-10-22 - 阶段 3：设计系统 v2
+### 2025-10-22 - 阶段 3：设计系统 v2（已废弃）
 - 完成代码现状分析和模型配置检查
 - 识别文字生成效果问题（Flux 1.1 Pro 不适合精确文字渲染）
 - 选择设计灵感：Dieter Rams（极简工业设计）+ Josef Müller-Brockmann（瑞士网格系统）
 - 创建设计改造方案文档（DESIGN_REFRESH_PLAN.md）
-- 实现 v2 版本组件：
-  - `styles.module.css` - 新设计系统样式
-  - `StyleSelector_v2.tsx` - 极简样式选择器
-  - `GreetingPresets_v2.tsx` - 简约祝福语组件
-  - `worker_v2.tsx` - 重构主组件
-  - `top_v2.tsx` - 简化 Hero 组件
-  - `/text-to-image-v2/page.tsx` - v2 版本页面
-- 保留原版本以便对比测试
+- 实现 v2 版本组件（后因用户反馈不佳被删除）
+- **决策**：v2 设计被拒绝，保留原设计继续优化
+
+### 2025-10-22 - 阶段 5：Credits 调整 + 用户体验优化（进行中）
+
+#### 5.1 初始 Credits 调整
+**调整原因**：20 个免费 credits 过多，不利于付费转化
+**修改内容**：
+- 文件：`/src/app/api/auth/[...nextauth]/route.ts`
+- 从 `period_remain_count: 20` 改为 `period_remain_count: 3`
+- 新用户注册后可免费生成 3 张生日卡片
+
+**配套文案更新**：
+- 文件：`/messages/en.json`
+- FAQ Q2 答案：从"每日 1 张免费"改为"注册赠送 3 张免费"
+- 原文：`"Yes! You can create 1 free card per day."`
+- 新文：`"Yes! You get 3 free cards when you sign up."`
+
+**业务逻辑说明**：
+- 注册时一次性赠送 3 credits
+- 每生成 1 张卡片消耗 1 credit（根据 effect 表配置）
+- 用完后需要订阅 Premium 获取无限额度
+
+#### 5.2 用户体验优化（已完成 ✅）
+
+**目标**：提升用户首次使用体验，降低学习成本，提高转化率
+
+##### 优化 1：友好的错误提示
+**修改文件**：
+- `messages/en.json` - 添加 `TextToImage.errors` 部分
+- `src/components/replicate/text-to-image/worker.tsx` - 使用新的翻译文案
+
+**对比效果**：
+```typescript
+// 之前：生硬的提示
+"No credit left"
+"Please enter a birthday message"
+
+// 现在：温暖、引导性的提示
+"Oops! You've used your 3 free cards. 🎉 Subscribe to create unlimited birthday wishes!"
+"Please enter a birthday message to get started"
+```
+
+**用户价值**：
+- ✅ 明确告知用户已使用的免费额度数量（3 张）
+- ✅ 添加 emoji 增加友好感
+- ✅ 引导用户订阅（付费转化）
+
+##### 优化 2：输入框示例文案
+**修改内容**：
+- 将 placeholder 从通用提示改为具体示例
+- 使用更具启发性的文案
+
+**对比效果**：
+```typescript
+// 之前：
+"Enter your birthday message here"
+
+// 现在：
+"e.g., Happy Birthday! Wishing you a day filled with love, laughter, and all your favorite things!"
+```
+
+**用户价值**：
+- ✅ 提供写作灵感，降低空白页焦虑
+- ✅ 展示理想的消息长度和风格
+- ✅ 帮助用户快速开始
+
+##### 优化 3：智能字符限制提示
+**修改内容**：
+- 将字符计数改为动态模板
+- 当输入少于 50 个字符时，显示最佳长度提示
+
+**实现代码**：
+```typescript
+<div className="flex items-center justify-between mt-2">
+  <p className="text-sm text-gray-500">
+    {t("input.characterCount").replace("{count}", prompt.length.toString())}
+  </p>
+  {prompt.length < 50 && (
+    <p className="text-sm text-blue-600">
+      {t("input.characterHint")}
+    </p>
+  )}
+</div>
+```
+
+**对比效果**：
+```
+之前：
+"15/200 characters"
+
+现在（少于 50 字符时）：
+"15/200 characters" | "💡 Tip: 50-100 characters works best"
+```
+
+**用户价值**：
+- ✅ 实时指导用户优化内容长度
+- ✅ 提升 AI 生成效果（50-100 字符是最佳长度）
+- ✅ 防止用户输入过短或过长的内容
+
+**技术亮点**：
+- 使用条件渲染（`{prompt.length < 50 && ...}`）
+- 翻译字符串支持变量替换（`{count}` placeholder）
+- 保持 UI 一致性（灰色 vs 蓝色区分提示类型）
+
+### 2025-10-22 - 阶段 4：落地页完善 + Prompt 优化准备（已完成）
+
+#### 4.1 落地页组件核心发现
+**重要发现**：所有落地页组件（what.tsx, how.tsx, feature.tsx, faq.tsx, cta.tsx）已经通过翻译系统完成生日卡片主题转换！
+
+**架构说明**：
+```typescript
+// 页面入口：/src/app/[locale]/(free)/page.tsx
+const multiLanguage = "HomePage";
+
+// 所有组件调用
+<What multiLanguage={multiLanguage} image={whatImage} />
+<How multiLanguage={multiLanguage} image={howImage} />
+<FeatureHero multiLanguage={multiLanguage} />
+<Faq multiLanguage={multiLanguage} grid={true} />
+<Cta multiLanguage={multiLanguage} />
+```
+
+**工作原理**：
+- 组件内部使用 `useTranslations(params.multiLanguage)` 获取翻译函数
+- 通过 `t("what.title")`, `t("how.description")` 等获取文本
+- `messages/en.json` 中的 `HomePage` 命名空间已包含完整的生日卡片主题内容
+
+**验证结果**：
+- ✅ what.tsx - 无硬编码内容，完全依赖翻译
+- ✅ how.tsx - 无硬编码内容，完全依赖翻译
+- ✅ feature.tsx - 无硬编码内容，完全依赖翻译
+- ✅ faq.tsx - 无硬编码内容，完全依赖翻译
+- ✅ cta.tsx - 无硬编码内容，完全依赖翻译
+
+**结论**：由于翻译系统的良好设计，落地页组件无需任何代码修改即可完成生日卡片主题转换。
+
+#### 4.2 构建系统问题修复
+**问题**：构建失败，报告文件导入错误和大小写冲突
+**根本原因**：`.next` 构建缓存残留了已删除文件的引用
+**解决方案**：
+```bash
+rm -rf .next
+npm run build
+```
+**结果**：✅ 构建成功，所有错误消除
+
+**经验教训**：
+- macOS 文件系统不区分大小写，但构建系统区分
+- 删除文件或重命名后需要清理构建缓存
+- 后续重构时应先本地测试，再部署
+
+#### 4.3 文字渲染质量问题分析
+**当前模型**：`black-forest-labs/flux-1.1-pro` (来自数据库 effect 表 ID=2)
+**核心问题**：Flux 系列模型不擅长精确的文字渲染
+
+**解决方案选项**：
+1. **Ideogram v3 Turbo** ($0.03/图) - AI 模型中文字渲染最好
+2. **前端文字叠加** (Canvas/SVG) - 100% 准确但需要开发
+3. **DALL-E 3** ($0.04-0.08/图) - 高质量但成本较高
+4. **Prompt 优化** - 效果有限，作为辅助手段
+
+**用户选择**：使用 Google AI Studio (Gemini) 免费测试 prompt 优化
+
+#### 4.4 Prompt 优化指南创建
+**文件**：`PROMPT_OPTIMIZATION_GUIDE.md`
+
+**内容包括**：
+1. **测试平台**：https://aistudio.google.com/（免费）
+2. **4 种风格的 Prompt 模板**：
+   - Warm（温馨）：暖色调、柔和光线、家庭友好
+   - Funny（搞笑）：卡通风格、明亮色彩、幽默元素
+   - Formal（正式）：优雅排版、专业配色、精致美学
+   - Cute（可爱）：粉彩色调、卡哇伊风格、甜美氛围
+3. **文字渲染优化关键词**：
+   - 清晰度：`clear readable typography`, `sharp text rendering`
+   - 样式：`elegant serif font`, `modern sans-serif`, `handwritten calligraphy`
+   - 位置：`text in the center`, `prominently displayed`
+   - 强调：`text is the main element`, `make text stand out`
+4. **测试流程**：
+   - 基础测试 → 识别问题 → 调整 prompt → 重新测试 → 应用最佳版本
+5. **当前系统 Prompt 分析**：
+   ```typescript
+   const fullPrompt = `${stylePrompts[selectedStyle]}birthday card with text: "${prompt}", creative typography, celebration theme, high quality design`;
+   ```
+6. **优化建议**：在 stylePrompts 中加入更多文字相关描述
+
+**下一步**：等待用户测试结果，然后更新 `worker.tsx` 中的 stylePrompts
 
 ### 2025-10-22
 - 创建此文档
 - 记录阶段 1 和阶段 2 的所有实现细节
 - 添加技术架构说明
 - 添加设计决策记录
+- 完成阶段 3（v2 设计废弃）和阶段 4（落地页验证 + Prompt 优化准备）

@@ -80,13 +80,13 @@ export default function Worker(props: {
         typeof userSubscriptionInfo?.remain_count === "number" &&
         userSubscriptionInfo.remain_count < props.credit
       ) {
-        toast.warning("No credit left");
+        toast.warning(t("errors.noCredit"));
         return;
       }
     }
 
     if (prompt.length === 0) {
-      toast.warning("Please enter a birthday message");
+      toast.warning(t("errors.emptyMessage"));
       return;
     }
 
@@ -220,7 +220,7 @@ export default function Worker(props: {
             <Textarea
               className="w-full"
               minRows={4}
-              placeholder={props.promptTips || "Enter your birthday message here"}
+              placeholder={t("input.placeholder")}
               radius="lg"
               variant="bordered"
               value={prompt}
@@ -231,9 +231,16 @@ export default function Worker(props: {
                 inputWrapper: "border-2 border-gray-300 hover:border-pink-400 focus:border-pink-500"
               }}
             />
-            <p className="text-sm text-gray-500 mt-2">
-              {prompt.length}/200 characters
-            </p>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-sm text-gray-500">
+                {t("input.characterCount").replace("{count}", prompt.length.toString())}
+              </p>
+              {prompt.length < 50 && (
+                <p className="text-sm text-blue-600">
+                  {t("input.characterHint")}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Generate Button */}

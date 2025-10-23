@@ -54,7 +54,7 @@
       "Q1": "How do I create my first birthday card?",
       "A1": "Simply choose a style, add your message (or pick from our preset greetings), and click generate. Your unique card will be ready in about 30 seconds!",
       "Q2": "Is it really free?",
-      "A2": "Yes! You can create 1 free card per day. For unlimited creations, check out our premium plans.",
+      "A2": "Yes! You get 3 free cards when you sign up. For unlimited creations, check out our premium plans.",
       "Q3": "Do I need design skills?",
       "A3": "Not at all! Our tool is designed for everyone, including those who have never used design software. If you can type a message, you can create a card.",
       "Q4": "Can I use the cards commercially?",
@@ -183,6 +183,15 @@
         "colleagues": "Colleagues",
         "general": "General"
       }
+    },
+    "input": {
+      "placeholder": "e.g., Happy Birthday! Wishing you a day filled with love, laughter, and all your favorite things!",
+      "characterCount": "{count}/200 characters",
+      "characterHint": "💡 Tip: 50-100 characters works best"
+    },
+    "errors": {
+      "noCredit": "Oops! You've used your 3 free cards. 🎉 Subscribe to create unlimited birthday wishes!",
+      "emptyMessage": "Please enter a birthday message to get started"
     }
   },
 
