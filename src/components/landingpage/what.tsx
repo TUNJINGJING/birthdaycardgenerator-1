@@ -2,8 +2,9 @@ import React from "react";
 import { Button, Tab } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { localesName } from "@/i18n/routing";
+import CardPlaceholder from "@/components/birthday-card/CardPlaceholder";
 
-export default function What(params: { multiLanguage: string, image: string }) {
+export default function What(params: { multiLanguage: string, image?: string }) {
   const t = useTranslations(params.multiLanguage);
 
   return (
@@ -60,15 +61,10 @@ export default function What(params: { multiLanguage: string, image: string }) {
             </ul>
           </div>
           <div className="md:w-1/3 relative mt-8 md:mt-0">
-            <div className="absolute -inset-1 bg-black rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-            <img
-              src={params.image}
-              alt="Why Choose Nana Banana AI"
-              width={500}
-              height={500}
-              className="rounded-lg shadow-2xl transform hover:scale-110 transition duration-300"
-              loading="lazy"
-            />
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative bg-white p-6 rounded-lg shadow-2xl">
+              <CardPlaceholder variant="warm" className="w-full transform hover:scale-105 transition duration-300" />
+            </div>
           </div>
         </div>
       </div>

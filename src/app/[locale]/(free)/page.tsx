@@ -21,25 +21,6 @@ export default function Home({
 }: {
   params: { locale: string };
 }) {
-  const images = [
-    {
-      img: "/resources/example1.webp",
-      video: "/resources/example1.mp4",
-    },
-    {
-      img: "/resources/example2.webp",
-      video: "/resources/example2.mp4",
-    },
-    {
-      img: "/resources/example5.webp",
-      video: "/resources/example5.mp4",
-    },
-  ];
-
-  const video = "/resources/example3.webm";
-  const whatImage = "/resources/example3.webp";
-  const howImage = "/resources/example2.webp";
-
   const effectId = "2";  // 改为使用 text-to-image 的 effect ID
   const multiLanguage = "HomePage";
   const multiLanguageOfGenerator = "TextToImage";  // 使用 TextToImage 的翻译
@@ -57,16 +38,18 @@ export default function Home({
           outputDefaultImage={outputDefaultImage}
         />
       </div>
+      {/* 暂时隐藏示例区域 - 等待真实生日卡片示例
       <div className="pt-20 md:pt-40">
         <UserExample multiLanguage={multiLanguage} images={images} />
       </div>
+      */}
 
       <div className="pt-20 md:pt-40 w-full">
-        <What multiLanguage={multiLanguage} image={whatImage} />
+        <What multiLanguage={multiLanguage} />
       </div>
 
       <div className="pt-20 md:pt-40 w-full">
-        <How multiLanguage={multiLanguage} image={howImage} />
+        <How multiLanguage={multiLanguage} />
       </div>
 
       <div className="pt-20 md:pt-40 w-full">

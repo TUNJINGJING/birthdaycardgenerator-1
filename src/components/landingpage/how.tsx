@@ -2,8 +2,9 @@ import React from "react";
 import { Button, Tab } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { localesName } from "@/i18n/routing";
+import CardPlaceholder from "@/components/birthday-card/CardPlaceholder";
 
-export default function How(params: { multiLanguage: string, image: string }) {
+export default function How(params: { multiLanguage: string, image?: string }) {
   const t = useTranslations(params.multiLanguage);
 
   return (
@@ -39,15 +40,10 @@ export default function How(params: { multiLanguage: string, image: string }) {
             </ol>
           </div>
           <div className="md:w-1/3 relative mt-8 md:mt-0">
-            <div className="absolute -inset-1 bg-black rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-            <img
-              src={params.image}
-              alt="How to Use AImage"
-              width={500}
-              height={500}
-              className="rounded-lg shadow-2xl transform hover:scale-110 transition duration-300"
-              loading="lazy"
-            />
+            <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-blue-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative bg-white p-6 rounded-lg shadow-2xl">
+              <CardPlaceholder variant="cute" className="w-full transform hover:scale-105 transition duration-300" />
+            </div>
           </div>
         </div>
       </div>

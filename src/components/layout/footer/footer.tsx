@@ -3,6 +3,7 @@ import { Divider, Link } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import { useTranslations } from "next-intl";
 import { getDomain } from "@/config/domain";
+import BirthdayCardLogo from "@/components/birthday-card/BirthdayCardLogo";
 
 export default function Footer({ locale }: { locale: string }) {
   const t = useTranslations("Footer");
@@ -52,12 +53,7 @@ export default function Footer({ locale }: { locale: string }) {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 md:pr-8">
             <div className="flex items-center justify-center xl:justify-start">
-              <img
-                src="/logo.jpeg"
-                alt="Birthday Card Generator"
-                className="w-8 h-8 mr-2"
-                loading="lazy"
-              />
+              <BirthdayCardLogo size={32} className="mr-2" />
               <span className="text-medium font-medium">
                 Birthday Card Generator
               </span>

@@ -24,6 +24,7 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import BirthdayCardLogo from "@/components/birthday-card/BirthdayCardLogo";
 
 const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
   ({ classNames = {}, ...props }, ref) => {
@@ -69,12 +70,7 @@ const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
         onMenuOpenChange={setIsMenuOpen}
       >
         <NavbarBrand>
-          <img
-            src="/logo.jpeg"
-            alt="logo"
-            className="w-9 h-9 md:w-11 md:h-11 mr-2 mb-1 ml-1"
-            loading="lazy"
-          />
+          <BirthdayCardLogo size={44} className="mr-2 mb-1 ml-1" />
           <p className="text-2xl font-bold hidden lg:block text-blue-700">
             Birthday Card Generator
           </p>
