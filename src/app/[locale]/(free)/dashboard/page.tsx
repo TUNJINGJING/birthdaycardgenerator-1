@@ -141,6 +141,25 @@ export default function Dashboard() {
     return new Date(date).toLocaleDateString();
   };
 
+  const getCardStyle = (prompt: string): string => {
+    if (!prompt) return "Birthday Card";
+
+    const lowerPrompt = prompt.toLowerCase();
+    if (lowerPrompt.includes("warm") || lowerPrompt.includes("cozy") || lowerPrompt.includes("heartwarming")) {
+      return "Warm";
+    }
+    if (lowerPrompt.includes("funny") || lowerPrompt.includes("playful") || lowerPrompt.includes("humorous")) {
+      return "Funny";
+    }
+    if (lowerPrompt.includes("formal") || lowerPrompt.includes("elegant") || lowerPrompt.includes("sophisticated")) {
+      return "Formal";
+    }
+    if (lowerPrompt.includes("cute") || lowerPrompt.includes("adorable") || lowerPrompt.includes("kawaii")) {
+      return "Cute";
+    }
+    return "Birthday Card";
+  };
+
   return (
     <div className="">
       <div className="container max-w-7xl mx-auto px-4 md:p-8 py-10 md:py-12 md:pb-24">
@@ -260,7 +279,7 @@ export default function Dashboard() {
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">
-                            {result.effect_name}
+                            {getCardStyle(result.prompt)}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
                             {getRelativeTime(result.created_at)}

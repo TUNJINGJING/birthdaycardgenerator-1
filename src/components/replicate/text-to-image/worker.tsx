@@ -154,6 +154,12 @@ export default function Worker(props: {
       (newPrediction.created_at
         ? new Date().getTime() - new Date(newPrediction.created_at).getTime()
         : -1) / 1000;
+
+    // 获取生成的图片URL
+    const imageUrl = Array.isArray(newPrediction.output) && newPrediction.output.length > 1
+      ? newPrediction.output[1]
+      : newPrediction.output || "";
+
     fetch("/api/effect_result/update", {
       method: "POST",
       headers: {
@@ -164,7 +170,7 @@ export default function Worker(props: {
         status: newPrediction.status,
         running_time: runningTime,
         updated_at: new Date(),
-        original_image_url: "",
+        original_image_url: imageUrl, // 传递正确的图片URL
         object_key: newPrediction.id.substring(0, 8),
       }),
     });
