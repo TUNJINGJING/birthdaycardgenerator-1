@@ -631,3 +631,289 @@ npm run build
 - 添加技术架构说明
 - 添加设计决策记录
 - 完成阶段 3（v2 设计废弃）和阶段 4（落地页验证 + Prompt 优化准备）
+
+---
+
+## 阶段 6: P1 功能 - 分享功能 + 品牌视觉更新（已完成）
+
+### 2025-10-24 - 分享功能实现
+**日期**: 2025-10-24
+**任务**: 实现 P1 基础分享功能 + 清理旧视觉内容
+
+#### 6.1 分享功能实现 ✅
+
+##### API 路由
+**文件**: `/src/app/api/share/create/route.ts`
+
+**功能**：生成唯一分享 ID
+```typescript
+export async function POST(request: NextRequest) {
+  const { prediction_id } = await request.json();
+  const shareId = genUniSeq();
+
+  return NextResponse.json({
+    shareId: shareId,
+    shareUrl: `/share/${shareId}?prediction_id=${prediction_id}`,
+  });
+}
+```
+
+**技术说明**：
+- 使用 `genUniSeq()` 生成唯一 ID
+- 返回分享 URL（包含 shareId 和 prediction_id）
+- 暂时通过 URL 参数传递，未存储到数据库
+
+##### 公开分享页面
+**文件**: `/src/app/[locale]/share/[shareId]/page.tsx`
+
+**功能**：
+- 动态路由接收 shareId
+- 从 query string 获取 prediction_id
+- 生成 Open Graph 元标签（支持社交媒体预览）
+- 调用 ShareCardView 组件展示卡片
+
+**Open Graph 实现**：
+```typescript
+export async function generateMetadata({ params, searchParams }: SharePageProps): Promise<Metadata> {
+  const prediction = await fetch(`${baseUrl}/api/predictions/${predictionId}`);
+  const imageUrl = prediction.output;
+
+  return {
+    openGraph: {
+      images: imageUrl ? [imageUrl] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: imageUrl ? [imageUrl] : [],
+    },
+  };
+}
+```
+
+##### 分享组件
+**文件**: `/src/components/share/ShareCardView.tsx`
+
+**功能**：
+- 加载并展示分享的卡片
+- 下载按钮（PNG 格式）
+- 复制链接按钮
+- 社交媒体分享按钮（Twitter、Facebook、WhatsApp）
+- 错误处理和加载状态
+- CTA 按钮引导创建自己的卡片
+
+**状态管理**：
+```typescript
+const [prediction, setPrediction] = useState<any>(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+```
+
+**社交媒体分享实现**：
+```typescript
+const handleSocialShare = (platform: string) => {
+  const urls: Record<string, string> = {
+    twitter: `https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    whatsapp: `https://wa.me/?text=${text}%20${encodedUrl}`,
+  };
+  window.open(urls[platform], "_blank", "width=600,height=400");
+};
+```
+
+##### 输出组件更新
+**文件**: `/src/components/replicate/text-to-image/img-output.tsx`
+
+**新增功能**：
+- Share Card 按钮
+- 复制链接到剪贴板（使用 Sonner toast 提示）
+- 社交媒体图标按钮（仅在生成分享链接后显示）
+- 下载文件名改为 "birthday-card.png"
+
+**Share 流程**：
+```typescript
+const handleShare = async () => {
+  const response = await fetch("/api/share/create", {
+    method: "POST",
+    body: JSON.stringify({ prediction_id: prediction.id }),
+  });
+
+  const data = await response.json();
+  const fullUrl = `${window.location.origin}/share/${data.shareId}`;
+
+  await navigator.clipboard.writeText(fullUrl);
+  toast.success("Share link copied to clipboard!");
+};
+```
+
+#### 6.2 品牌视觉更新 ✅
+
+##### SVG Logo 组件
+**文件**: `/src/components/birthday-card/BirthdayCardLogo.tsx`
+
+**设计元素**：
+- 渐变色卡片背景（红色 → 青色 → 黄色）
+- 生日蛋糕图案（粉色渐变）
+- 蜡烛和火焰
+- 装饰性星星
+- 可自定义尺寸
+
+**技术实现**：
+```typescript
+export default function BirthdayCardLogo({ size = 32, className = "" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="cardGradient">...</linearGradient>
+        <linearGradient id="cakeGradient">...</linearGradient>
+      </defs>
+      {/* Card + Cake + Candle + Flame + Stars */}
+    </svg>
+  );
+}
+```
+
+##### 卡片占位符组件
+**文件**: `/src/components/birthday-card/CardPlaceholder.tsx`
+
+**4 种风格变体**：
+1. **Warm（温馨）**：粉红色 + 黄色，心形图案
+2. **Funny（搞笑）**：黄色 + 紫色，笑脸图案
+3. **Formal（正式）**：深蓝色 + 淡蓝色，矩形框架
+4. **Cute（可爱）**：粉色，圆形和笑脸图案
+
+**组件特点**：
+- 每种风格独特的配色和图案
+- 响应式 SVG（自适应容器大小）
+- 渐变背景 + 装饰边框
+- 底部显示 "Birthday Card" 标签
+
+##### 落地页组件更新
+**文件**:
+- `/src/components/landingpage/what.tsx`
+- `/src/components/landingpage/how.tsx`
+
+**修改内容**：
+- 移除旧的图片引用（example1.webp, example2.webp 等）
+- 替换为 CardPlaceholder 组件
+- `what.tsx` 使用 `variant="warm"`
+- `how.tsx` 使用 `variant="cute"`
+- 添加卡片容器和阴影效果
+
+**布局改进**：
+```typescript
+<div className="relative bg-white p-6 rounded-lg shadow-2xl">
+  <CardPlaceholder variant="warm" className="w-full transform hover:scale-105 transition duration-300" />
+</div>
+```
+
+##### Navbar 和 Footer 更新
+**文件**:
+- `/src/components/layout/navbar/navbar.tsx`
+- `/src/components/layout/footer/footer.tsx`
+
+**修改内容**：
+- 移除 `/logo.jpeg` 图片引用
+- 替换为 `BirthdayCardLogo` 组件
+- Navbar logo 尺寸：44px
+- Footer logo 尺寸：32px
+
+**对比效果**：
+```typescript
+// 之前
+<img src="/logo.jpeg" alt="logo" className="w-9 h-9" />
+
+// 现在
+<BirthdayCardLogo size={44} className="mr-2 mb-1 ml-1" />
+```
+
+##### 首页数据清理
+**文件**: `/src/app/[locale]/(free)/page.tsx`
+
+**清理内容**：
+- 删除旧的示例图片和视频数据（images 数组）
+- 删除 whatImage 和 howImage 引用
+- 移除 What 和 How 组件的 image 属性
+
+**精简代码**：
+```typescript
+// 之前
+const images = [
+  { img: "/resources/example1.webp", video: "/resources/example1.mp4" },
+  // ...
+];
+const whatImage = "/resources/example3.webp";
+<What multiLanguage={multiLanguage} image={whatImage} />
+
+// 现在
+<What multiLanguage={multiLanguage} />
+```
+
+#### 6.3 待完成任务更新
+
+##### P0 功能 - 100% 完成 ✅
+- ✅ Google OAuth 快速登录
+- ✅ 生日主题 AI 图片生成
+- ✅ 预制祝福语系统
+- ✅ 实时预览和下载
+- ✅ 极简用户界面
+- ✅ 信用额度系统（3 个免费额度）
+
+##### P1 功能 - 75% 完成 🔄
+- ✅ **基础分享链接功能**（今日完成）
+- ✅ 每日1张免费额度限制
+- ✅ 模板简单分类
+- ⏳ **基础历史记录管理**（Dashboard 简化 - 待做）
+- ❌ 基础文字样式调整（可选，低优先级）
+
+#### 6.4 部署记录
+
+**Commit**: `9927fa2`
+**消息**: `feat: 添加分享功能并更新品牌视觉`
+
+**文件变更**：
+- 新增 5 个文件：
+  - `src/app/[locale]/share/[shareId]/page.tsx`
+  - `src/app/api/share/create/route.ts`
+  - `src/components/birthday-card/BirthdayCardLogo.tsx`
+  - `src/components/birthday-card/CardPlaceholder.tsx`
+  - `src/components/share/ShareCardView.tsx`
+- 修改 7 个文件：
+  - `src/app/[locale]/(free)/page.tsx`
+  - `src/components/landingpage/how.tsx`
+  - `src/components/landingpage/what.tsx`
+  - `src/components/layout/footer/footer.tsx`
+  - `src/components/layout/navbar/navbar.tsx`
+  - `src/components/replicate/text-to-image/img-output.tsx`
+  - `public/sitemap-0.xml`
+
+**变更统计**：+687 行，-79 行
+
+**构建状态**：✅ 成功
+**部署状态**：✅ 已推送至 GitHub
+
+#### 6.5 下一步优先级
+
+**高优先级（P1）**：
+1. **Dashboard 简化** - 唯一剩余的 P1 功能
+   - 简化表格显示
+   - 优化移动端体验
+   - 添加快速操作按钮
+
+**中优先级（P2）**：
+2. **示例卡片内容** - 改善首页展示
+3. **SEO 优化** - 提升搜索可见性
+
+**低优先级（P2+）**：
+4. 付费订阅系统
+5. 多语言支持
+6. 高级模板库
+
+---
+
+### 2025-10-24 更新日志
+- ✅ 实现完整分享功能（API + 页面 + UI）
+- ✅ 创建 SVG Logo 和卡片占位符
+- ✅ 清理所有旧视觉内容
+- ✅ 更新 Navbar 和 Footer
+- ✅ 成功构建和部署
+- 📝 更新 IMPLEMENTATION_PROGRESS.md

@@ -6,21 +6,18 @@ import {
   Pagination,
   Modal,
   Button,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
   Spinner,
   ModalContent,
   ModalBody,
-  Link,
+  Card,
+  CardBody,
+  CardFooter,
 } from "@nextui-org/react";
-import { EyeIcon } from "@nextui-org/shared-icons";
 import { UserSubscriptionInfo } from "@/backend/type/domain/user_subscription_info";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Icon } from "@iconify/react";
+import Image from "next/image";
 export default function Dashboard() {
   const { user } = useAppContext();
   const [effectResults, setEffectResults] = useState<EffectResultInfo[]>([]);
@@ -32,7 +29,7 @@ export default function Dashboard() {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const pageSize = 10;
+  const pageSize = 9; // 改为9（3x3网格）
   const [userSubscriptionInfo, setUserSubscriptionInfo] =
     useState<UserSubscriptionInfo | null>(null);
   const router = useRouter();
@@ -123,6 +120,27 @@ export default function Dashboard() {
     setIsModalOpen(true);
   };
 
+  const handleDownload = (result: EffectResultInfo) => {
+    if (!result.url) return;
+    const link = document.createElement("a");
+    link.href = result.url;
+    link.setAttribute("download", `birthday-card-${result.result_id}.png`);
+    link.setAttribute("target", "_blank");
+    link.click();
+  };
+
+  const getRelativeTime = (date: Date): string => {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - new Date(date).getTime()) / 1000);
+
+    if (diffInSeconds < 60) return "Just now";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)}w ago`;
+    return new Date(date).toLocaleDateString();
+  };
+
   return (
     <div className="">
       <div className="container max-w-7xl mx-auto px-4 md:p-8 py-10 md:py-12 md:pb-24">
@@ -190,93 +208,102 @@ export default function Dashboard() {
           </div>
         ) : effectResults && effectResults.length > 0 ? (
           <>
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-blue-100 dark:border-gray-700 p-6 animate-fade-in overflow-x-auto">
-              <Table
-                className="min-w-full"
-                aria-label="Results table"
-                classNames={{
-                  wrapper: "bg-transparent",
-                  th: "bg-blue-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200",
-                  td: "text-gray-700 dark:text-gray-300",
-                }}
-              >
-                <TableHeader>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    #
-                  </TableColumn>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    {t("table.function")}
-                  </TableColumn>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    {t("table.processTime")}
-                  </TableColumn>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    {t("table.status")}
-                  </TableColumn>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    {t("table.credit")}
-                  </TableColumn>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    {t("table.created")}
-                  </TableColumn>
-                  <TableColumn className="text-xs md:text-sm font-semibold text-center">
-                    {t("table.view")}
-                  </TableColumn>
-                </TableHeader>
-                <TableBody>
-                  {effectResults.map((result, index) => (
-                    <TableRow
-                      key={result.result_id}
-                      className="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors duration-200"
-                    >
-                      <TableCell className="text-center text-xs md:text-base font-medium">
-                        {(page - 1) * pageSize + index + 1}
-                      </TableCell>
-                      <TableCell className="text-center text-xs md:text-base">
-                        {result.effect_name}
-                      </TableCell>
-                      <TableCell className="text-center text-xs md:text-base">
-                        {result.running_time === -1
-                          ? "N/A"
-                          : `${result.running_time}s`}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex justify-center">
-                          {result.status === "succeeded" ? (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                              ✓ {result.status}
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                              ✗ {result.status}
-                            </span>
-                          )}
+            {/* 卡片网格布局 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+              {effectResults.map((result) => (
+                <Card
+                  key={result.result_id}
+                  className="group hover:shadow-xl transition-all duration-300 border border-blue-100 dark:border-gray-700"
+                >
+                  <CardBody
+                    className="p-0 overflow-hidden cursor-pointer"
+                    onClick={() => handleViewResult(result)}
+                  >
+                    {/* 图片预览区域 */}
+                    <div className="relative aspect-square w-full bg-gray-100 dark:bg-gray-800">
+                      {result.url && result.status === "succeeded" ? (
+                        <img
+                          src={result.url}
+                          alt="Birthday Card"
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Icon
+                            icon="mdi:image-off"
+                            className="text-gray-400"
+                            width={64}
+                          />
                         </div>
-                      </TableCell>
-                      <TableCell className="text-center text-xs md:text-base">
-                        {result.status === "succeeded" ? result.credit : "N/A"}
-                      </TableCell>
-                      <TableCell className="text-center text-xs md:text-base">
-                        {new Date(result.created_at).toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Button
-                          isIconOnly
-                          className="bg-blue-100 text-blue-600 hover:bg-blue-200 dark:bg-gray-700 dark:text-blue-400 dark:hover:bg-gray-600 transition-colors"
-                          variant="flat"
-                          onPress={() => handleViewResult(result)}
-                          isDisabled={
-                            !result.url || result.status !== "succeeded"
-                          }
-                          size="sm"
-                        >
-                          <EyeIcon className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                      )}
+
+                      {/* 悬浮遮罩 - hover时显示 */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <Icon
+                          icon="mdi:eye"
+                          className="text-white"
+                          width={48}
+                        />
+                      </div>
+
+                      {/* 状态标签 */}
+                      {result.status !== "succeeded" && (
+                        <div className="absolute top-2 right-2 bg-gray-800 bg-opacity-80 text-white text-xs px-2 py-1 rounded">
+                          {result.status}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 卡片信息区域 */}
+                    <div className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">
+                            {result.effect_name}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {getRelativeTime(result.created_at)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Prompt预览（截断） */}
+                      {result.prompt && (
+                        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 mt-2">
+                          {result.prompt}
+                        </p>
+                      )}
+                    </div>
+                  </CardBody>
+
+                  <CardFooter className="border-t border-blue-100 dark:border-gray-700 p-3">
+                    <div className="flex gap-2 w-full">
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        color="primary"
+                        className="flex-1"
+                        onPress={() => handleViewResult(result)}
+                        startContent={<Icon icon="mdi:eye" width={18} />}
+                      >
+                        View
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        color="success"
+                        className="flex-1"
+                        onPress={() => handleDownload(result)}
+                        isDisabled={!result.url || result.status !== "succeeded"}
+                        startContent={<Icon icon="mdi:download" width={18} />}
+                      >
+                        Download
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
 
             {totalCount > 0 && (
