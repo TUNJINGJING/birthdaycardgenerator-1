@@ -915,5 +915,212 @@ const whatImage = "/resources/example3.webp";
 - ✅ 创建 SVG Logo 和卡片占位符
 - ✅ 清理所有旧视觉内容
 - ✅ 更新 Navbar 和 Footer
+- ✅ Dashboard卡片式布局重构
+- ✅ 修复图片URL保存和标题显示问题
 - ✅ 成功构建和部署
 - 📝 更新 IMPLEMENTATION_PROGRESS.md
+
+---
+
+## 阶段 7: Dashboard卡片式布局 + Bug修复（已完成）
+
+### 2025-10-24 - Dashboard重构为卡片式布局
+**Commit**: `bccc786`
+**任务**: 将Dashboard从表格式改为卡片式布局（P1功能完成）
+
+#### 7.1 卡片式布局实现 ✅
+
+##### 响应式网格设计
+**文件**: `/src/app/[locale]/(free)/dashboard/page.tsx`
+
+**布局结构**：
+- 桌面端（lg）：3列网格
+- 平板端（md）：2列网格
+- 移动端：1列网格
+- PageSize：从10改为9（3x3网格）
+
+**技术实现**：
+```typescript
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {effectResults.map((result) => (
+    <Card>...</Card>
+  ))}
+</div>
+```
+
+##### 卡片组件结构
+**CardBody - 图片预览区**：
+- `aspect-square` 保持正方形比例
+- 图片懒加载：`loading="lazy"`
+- 悬浮效果：黑色遮罩 + 眼睛图标
+- 状态标签：失败时显示在右上角
+- 点击查看大图
+
+**CardBody - 信息区**：
+- 卡片风格标题（蓝色加粗）
+- 相对时间显示（2h ago, 3d ago等）
+- Prompt预览（2行截断）
+
+**CardFooter - 操作按钮**：
+- View按钮：打开Modal查看大图
+- Download按钮：直接下载PNG
+
+##### 辅助函数
+
+**getRelativeTime()**：
+```typescript
+const getRelativeTime = (date: Date): string => {
+  if (diffInSeconds < 60) return "Just now";
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  // ... 更多时间单位
+};
+```
+
+**handleDownload()**：
+```typescript
+const handleDownload = (result: EffectResultInfo) => {
+  const link = document.createElement("a");
+  link.href = result.url;
+  link.setAttribute("download", `birthday-card-${result.result_id}.png`);
+  link.click();
+};
+```
+
+##### 性能优化
+- ✅ 图片懒加载（不立即加载全部图片）
+- ✅ 文件大小减少：3.16kB → 3.02kB（-4.4%）
+- ✅ PageSize优化：9张/页（完美的3x3网格）
+
+---
+
+### 2025-10-24 - Bug修复：图片显示和标题问题
+**Commit**: `97552ae`
+**任务**: 修复Dashboard图片显示空白和标题显示错误
+
+#### 7.2 Bug修复 ✅
+
+##### 问题1：图片URL未保存
+**根本原因**：
+- `worker.tsx:167` 传递 `original_image_url: ""`（空字符串）
+- 导致数据库保存时URL为空
+
+**修复方案**：
+**文件**: `/src/components/replicate/text-to-image/worker.tsx`
+
+```typescript
+// 之前
+original_image_url: "",
+
+// 修复后
+const imageUrl = Array.isArray(newPrediction.output) && newPrediction.output.length > 1
+  ? newPrediction.output[1]
+  : newPrediction.output || "";
+
+original_image_url: imageUrl,
+```
+
+**技术细节**：
+- 支持Flux模型的output数组格式（`[url1, url2]`）
+- 优先使用数组的第二个元素（索引1）
+- 容错处理：空值时使用空字符串
+
+##### 问题2：标题显示"text-to-image"
+**根本原因**：
+- Dashboard直接显示 `result.effect_name`
+- 数据库中统一保存为"text-to-image"
+
+**修复方案**：
+**文件**: `/src/app/[locale]/(free)/dashboard/page.tsx`
+
+**新增智能风格检测函数**：
+```typescript
+const getCardStyle = (prompt: string): string => {
+  if (!prompt) return "Birthday Card";
+
+  const lowerPrompt = prompt.toLowerCase();
+  if (lowerPrompt.includes("warm") || lowerPrompt.includes("cozy")) return "Warm";
+  if (lowerPrompt.includes("funny") || lowerPrompt.includes("playful")) return "Funny";
+  if (lowerPrompt.includes("formal") || lowerPrompt.includes("elegant")) return "Formal";
+  if (lowerPrompt.includes("cute") || lowerPrompt.includes("adorable")) return "Cute";
+  return "Birthday Card";
+};
+```
+
+**使用方式**：
+```typescript
+// Dashboard卡片标题
+<p className="text-sm font-semibold text-blue-600">
+  {getCardStyle(result.prompt)}  // 而不是 result.effect_name
+</p>
+```
+
+**检测逻辑**：
+- 从完整的prompt中检测关键词
+- 大小写不敏感（toLowerCase）
+- 支持多个关键词（warm/cozy、funny/playful等）
+- 默认显示"Birthday Card"
+
+##### 影响范围
+
+**对旧数据**：
+- ❌ 旧卡片（6d ago）仍然不会显示图片（数据库URL为空）
+- ✅ 标题会根据prompt智能推断风格
+- ❌ Replicate临时URL可能已过期，无法恢复
+
+**对新数据**：
+- ✅ 新生成的卡片会正确保存URL
+- ✅ Dashboard能正确显示图片
+- ✅ 标题智能显示卡片风格
+
+##### 部署记录
+
+**Commit**: `97552ae`
+**消息**: `fix: 修复Dashboard图片显示和标题问题`
+
+**文件变更**：
+- 修改：`src/components/replicate/text-to-image/worker.tsx`（+7行）
+- 修改：`src/app/[locale]/(free)/dashboard/page.tsx`（+21行）
+
+**构建状态**：✅ 成功
+**部署状态**：✅ 已推送至 GitHub
+
+---
+
+## 阶段总结
+
+### P1功能完成度：100% ✅
+
+1. ✅ 每日免费额度（3张）
+2. ✅ 模板简单分类（祝福语分类）
+3. ✅ 基础分享链接功能
+4. ✅ 基础历史记录管理（Dashboard卡片式布局）
+
+### 技术债务清理
+
+- ✅ 修复图片URL保存问题
+- ✅ 修复标题显示问题
+- ✅ 优化Dashboard性能
+
+### 待完成任务（P2优先级）
+
+**高优先级**：
+1. **生成示例卡片** - 首页展示真实案例
+2. **SEO优化** - 提升搜索排名
+
+**中优先级**：
+3. 付费订阅系统（Stripe集成）
+4. 多语言支持（中文、西班牙语等）
+
+**低优先级**：
+5. 高级模板库
+6. 文字样式调整
+
+---
+
+### 2025-10-24 最新更新日志
+- ✅ Dashboard卡片式布局（响应式网格 + 懒加载）
+- ✅ 修复图片URL保存逻辑
+- ✅ 智能风格检测（从prompt推断）
+- ✅ 性能优化（文件大小-4.4%）
+- 📝 更新 IMPLEMENTATION_PROGRESS.md（完整记录阶段7）
