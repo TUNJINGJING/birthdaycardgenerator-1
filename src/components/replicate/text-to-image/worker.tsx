@@ -8,19 +8,16 @@ import { useRouter } from "next/navigation";
 import { handleApiErrors } from "@/components/replicate/common-logic/response";
 import Output from "@/components/replicate/text-to-image/img-output";
 import { UserSubscriptionInfo } from "@/backend/type/domain/user_subscription_info";
-import CreditInfo from "@/components/landingpage/credit-info";
 import { useTranslations } from "next-intl";
-import StyleSelector, { type CardStyle } from "@/components/birthday-card/StyleSelector";
-import GreetingPresets from "@/components/birthday-card/GreetingPresets";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // Style-specific prompt prefixes to enhance AI generation
 const stylePrompts = {
-  warm: "warm and cozy birthday celebration with soft colors, heartwarming atmosphere, gentle lighting, family-friendly, tender and affectionate mood, ",
-  funny: "funny and playful birthday card with cartoon style, bright cheerful colors, humorous elements, joyful and energetic vibe, ",
-  formal: "elegant and formal birthday design with sophisticated colors and typography, professional and refined aesthetic, classy celebration, ",
-  cute: "cute and adorable birthday theme with pastel colors and charming elements, sweet and lovely atmosphere, kawaii style, "
+  classic: "warm and cozy birthday celebration with soft colors, heartwarming atmosphere, gentle lighting, family-friendly, tender and affectionate mood, ",
+  modern: "modern minimalist birthday design with clean lines, contemporary aesthetic, sophisticated color palette, ",
+  bold: "bold and vibrant birthday card with strong colors, dynamic composition, energetic and eye-catching, ",
+  playful: "playful and fun birthday design with bright cheerful colors, whimsical elements, joyful and energetic vibe, "
 };
 
 export default function Worker(props: {
@@ -32,8 +29,10 @@ export default function Worker(props: {
   defaultImage?: string;
   lang?: string;
 }) {
-  const [prompt, setPrompt] = useState("");
-  const [selectedStyle, setSelectedStyle] = useState<CardStyle>("warm");
+  const [recipientName, setRecipientName] = useState("");
+  const [age, setAge] = useState("");
+  const [selectedStyle, setSelectedStyle] = useState<keyof typeof stylePrompts>("classic");
+  const [message, setMessage] = useState("");
   const [generating, setGenerating] = useState<boolean>(false);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +40,6 @@ export default function Worker(props: {
   const height = 1024;
   const [userSubscriptionInfo, setUserSubscriptionInfo] =
     useState<UserSubscriptionInfo | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const { user } = useAppContext();
   const router = useRouter();
   const t = useTranslations(props.lang || "index");
@@ -65,11 +63,6 @@ export default function Worker(props: {
       return res.json();
     });
     setUserSubscriptionInfo(userSubscriptionInfo);
-    setIsSubscribed(userSubscriptionInfo.subscription_status === "active");
-  };
-
-  const handleSelectGreeting = (greeting: string) => {
-    setPrompt(greeting);
   };
 
   const handleGenerate = async () => {
@@ -84,15 +77,16 @@ export default function Worker(props: {
       }
     }
 
-    if (prompt.length === 0) {
-      toast.warning(t("errors.emptyMessage"));
+    if (message.length === 0) {
+      toast.warning("Please enter a birthday message");
       return;
     }
 
-    // Combine style prefix with user's message for better AI generation
-    const enhancedPrompt = `${stylePrompts[selectedStyle]}birthday card with text: "${prompt}", creative typography, celebration theme, high quality design`;
+    // Build the prompt
+    const nameText = recipientName ? `for ${recipientName}` : "";
+    const ageText = age ? `, age ${age}` : "";
+    const enhancedPrompt = `${stylePrompts[selectedStyle]}birthday card ${nameText}${ageText} with text: "${message}", creative typography, celebration theme, high quality design`;
 
-    // step1: create prediction
     try {
       setGenerating(true);
       const response = await fetch("/api/predictions/text_to_image", {
@@ -133,7 +127,6 @@ export default function Worker(props: {
       return;
     }
 
-    // step2: wait for prediction to be succeeded or failed
     while (
       newPrediction.status !== "succeeded" &&
       newPrediction.status !== "failed"
@@ -148,13 +141,12 @@ export default function Worker(props: {
       }
       setPrediction(newPrediction);
     }
-    // update effect result
+
     const runningTime =
       (newPrediction.created_at
         ? new Date().getTime() - new Date(newPrediction.created_at).getTime()
         : -1) / 1000;
 
-    // 获取生成的图片URL
     const imageUrl = Array.isArray(newPrediction.output) && newPrediction.output.length > 1
       ? newPrediction.output[1]
       : newPrediction.output || "";
@@ -169,7 +161,7 @@ export default function Worker(props: {
         status: newPrediction.status,
         running_time: runningTime,
         updated_at: new Date(),
-        original_image_url: imageUrl, // 传递正确的图片URL
+        original_image_url: imageUrl,
         object_key: newPrediction.id.substring(0, 8),
       }),
     });
@@ -179,51 +171,75 @@ export default function Worker(props: {
   };
 
   return (
-    <section className="min-h-screen py-12 md:py-20 border-t-8 border-gray-300">
+    <section className="w-full py-12 md:py-20 border-t-8 border-gray-300">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           {/* Left Side - Input Section */}
           <div className="md:col-span-5 lg:col-span-4 space-y-12">
-            {/* Style Selection */}
-            <div className="space-y-3 group">
+
+            {/* 01 / Recipient Name */}
+            <div className="space-y-1 group">
               <label className="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
-                01 / Style
+                01 / Recipient
               </label>
-              <StyleSelector
-                selectedStyle={selectedStyle}
-                onStyleChange={setSelectedStyle}
+              <input
+                type="text"
+                className="w-full bg-transparent text-3xl font-bold font-serif border-b border-gray-300 py-2 focus:border-black focus:outline-none rounded-none placeholder-gray-300"
+                placeholder="Name Here"
+                value={recipientName}
+                onChange={(e) => setRecipientName(e.target.value)}
               />
             </div>
 
-            {/* Greeting Presets */}
-            <div className="space-y-3 group">
+            {/* 02 / Details (Age + Style) */}
+            <div className="space-y-1 group">
               <label className="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
-                02 / Templates
+                02 / Details
               </label>
-              <GreetingPresets
-                onSelectGreeting={handleSelectGreeting}
-                selectedGreeting={prompt}
-              />
+              <div className="flex gap-4">
+                <input
+                  type="text"
+                  className="w-1/3 bg-transparent text-3xl font-bold font-serif border-b border-gray-300 py-2 focus:border-black focus:outline-none rounded-none placeholder-gray-300"
+                  placeholder="Age"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+                <div className="w-2/3 relative">
+                  <select
+                    className="w-full bg-transparent text-3xl font-bold font-serif border-b border-gray-300 py-2 focus:border-black focus:outline-none rounded-none appearance-none cursor-pointer"
+                    value={selectedStyle}
+                    onChange={(e) => setSelectedStyle(e.target.value as keyof typeof stylePrompts)}
+                  >
+                    <option value="classic">Classic</option>
+                    <option value="modern">Modern</option>
+                    <option value="bold">Bold</option>
+                    <option value="playful">Playful</option>
+                  </select>
+                  <div className="absolute right-0 top-4 pointer-events-none text-xs">▼</div>
+                </div>
+              </div>
             </div>
 
-            {/* Message Input */}
-            <div className="space-y-3 group">
+            {/* 03 / Message */}
+            <div className="space-y-1 group">
               <label className="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
                 03 / Message
               </label>
               <textarea
-                className="w-full bg-transparent text-xl font-serif border-b border-gray-300 py-2 focus:border-black focus:outline-none rounded-none min-h-[100px] resize-none placeholder-gray-300 leading-relaxed"
+                className="w-full bg-transparent text-xl border-b border-gray-300 py-2 focus:border-black focus:outline-none rounded-none min-h-[100px] resize-none placeholder-gray-300 leading-relaxed"
                 placeholder="Type your wish..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               />
               <div className="flex items-center justify-between mt-2">
                 <p className="text-xs text-gray-400 font-mono">
-                  {prompt.length} characters
+                  {message.length} characters
                 </p>
-                <CreditInfo
-                  credit={userSubscriptionInfo?.remain_count?.toString() || ""}
-                />
+                {userSubscriptionInfo?.remain_count !== undefined && (
+                  <p className="text-xs text-gray-400 font-mono">
+                    Credits: {userSubscriptionInfo.remain_count}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -237,7 +253,7 @@ export default function Worker(props: {
                 <span className="w-12 h-12 rounded-full border border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors group-disabled:bg-gray-300 group-disabled:border-gray-300">
                   →
                 </span>
-                {generating ? "Processing..." : "Generate Card"}
+                {generating ? "Processing Request" : "Process Request"}
               </button>
             </div>
           </div>
