@@ -27,11 +27,11 @@ export default function Home({
   const outputDefaultImage = "/resources/text-to-image.jpg";
 
   return (
-    <main className="flex flex-col items-center rounded-2xl px-3 md:rounded-3xl md:px-0">
-      <div className="py-10 ">
+    <main className="flex flex-col items-center bg-[#F2F2F2] text-[#111]">
+      <div className="py-16 w-full">
         <TopHero multiLanguage={multiLanguage} locale={locale} />
       </div>
-      <div className="w-full flex justify-center items-center pt-3 mb-8">
+      <div className="w-full flex justify-center items-center">
         <WorkerWrapper
           effectId={effectId}
           multiLanguage={multiLanguageOfGenerator}

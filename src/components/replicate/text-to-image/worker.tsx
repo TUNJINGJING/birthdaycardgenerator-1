@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Textarea } from "@nextui-org/react";
 import Prediction from "@/backend/type/domain/replicate";
 import { useAppContext } from "@/contexts/app";
 import { toast } from "sonner";
@@ -180,107 +179,80 @@ export default function Worker(props: {
   };
 
   return (
-    <>
-      <div
-        className="container mx-auto flex flex-col lg:flex-row my-4 px-4 py-8 rounded-2xl shadow-xl bg-white border-2 border-pink-200"
-        style={{
-          boxShadow:
-            "0 0 30px rgba(255, 107, 157, 0.2), 0 0 60px rgba(255, 107, 157, 0.1)",
-        }}
-      >
-        {/* Left Side - Input Section */}
-        <div className="w-full lg:w-1/2 lg:px-6 lg:border-r border-divider border-gray-200 space-y-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-              {t("input.title")}
-            </h2>
-            <div className="flex items-center gap-3">
-              <CreditInfo
-                credit={userSubscriptionInfo?.remain_count?.toString() || ""}
+    <section className="min-h-screen py-12 md:py-20 border-t-8 border-gray-300">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+          {/* Left Side - Input Section */}
+          <div className="md:col-span-5 lg:col-span-4 space-y-12">
+            {/* Style Selection */}
+            <div className="space-y-3 group">
+              <label className="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
+                01 / Style
+              </label>
+              <StyleSelector
+                selectedStyle={selectedStyle}
+                onStyleChange={setSelectedStyle}
               />
             </div>
-          </div>
 
-          {/* Step 1: Style Selection */}
-          <div>
-            <StyleSelector
-              selectedStyle={selectedStyle}
-              onStyleChange={setSelectedStyle}
-            />
-          </div>
+            {/* Greeting Presets */}
+            <div className="space-y-3 group">
+              <label className="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
+                02 / Templates
+              </label>
+              <GreetingPresets
+                onSelectGreeting={handleSelectGreeting}
+                selectedGreeting={prompt}
+              />
+            </div>
 
-          {/* Step 2: Greeting Selection */}
-          <div>
-            <GreetingPresets
-              onSelectGreeting={handleSelectGreeting}
-              selectedGreeting={prompt}
-            />
-          </div>
-
-          {/* Step 3: Custom Message Input */}
-          <div>
-            <label className="block text-lg font-bold text-gray-800 mb-3">
-              Your Message
-            </label>
-            <Textarea
-              className="w-full"
-              minRows={4}
-              placeholder={t("input.placeholder")}
-              radius="lg"
-              variant="bordered"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              aria-label="Birthday Message"
-              classNames={{
-                input: "text-lg",
-                inputWrapper: "border-2 border-gray-300 hover:border-pink-400 focus:border-pink-500"
-              }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <p className="text-sm text-gray-500">
-                {t("input.characterCount").replace("{count}", prompt.length.toString())}
-              </p>
-              {prompt.length < 50 && (
-                <p className="text-sm text-blue-600">
-                  {t("input.characterHint")}
+            {/* Message Input */}
+            <div className="space-y-3 group">
+              <label className="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
+                03 / Message
+              </label>
+              <textarea
+                className="w-full bg-transparent text-xl font-serif border-b border-gray-300 py-2 focus:border-black focus:outline-none rounded-none min-h-[100px] resize-none placeholder-gray-300 leading-relaxed"
+                placeholder="Type your wish..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              />
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-xs text-gray-400 font-mono">
+                  {prompt.length} characters
                 </p>
-              )}
+                <CreditInfo
+                  credit={userSubscriptionInfo?.remain_count?.toString() || ""}
+                />
+              </div>
+            </div>
+
+            {/* Generate Button */}
+            <div className="pt-8">
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="group flex items-center gap-4 text-xl font-bold hover:gap-6 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="w-12 h-12 rounded-full border border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors group-disabled:bg-gray-300 group-disabled:border-gray-300">
+                  →
+                </span>
+                {generating ? "Processing..." : "Generate Card"}
+              </button>
             </div>
           </div>
 
-          {/* Generate Button */}
-          {generating ? (
-            <Button
-              isLoading
-              size="lg"
-              className="w-full mt-6 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-lg py-7 shadow-lg"
-            >
-              {prediction
-                ? prediction.status === "succeeded"
-                  ? "Finishing up..."
-                  : `Generating... (${prediction.status})`
-                : "Creating your card..."}
-            </Button>
-          ) : (
-            <Button
-              size="lg"
-              className="w-full mt-6 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold text-lg py-7 shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={handleGenerate}
-            >
-              Generate Birthday Card (1 credit)
-            </Button>
-          )}
+          {/* Right Side - Output Section */}
+          <div className="md:col-span-7 lg:col-span-8">
+            <Output
+              error={error || ""}
+              prediction={prediction}
+              defaultImage={props.defaultImage || ""}
+              showImage={null}
+            />
+          </div>
         </div>
-
-        {/* Right Side - Output Section */}
-        <Output
-          error={error || ""}
-          prediction={prediction}
-          defaultImage={props.defaultImage || ""}
-          showImage={null}
-        />
       </div>
-    </>
+    </section>
   );
 }
