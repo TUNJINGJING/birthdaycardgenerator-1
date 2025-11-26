@@ -1,135 +1,67 @@
+"use client";
+
 import React from "react";
-import { Divider, Link } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
-import { useTranslations } from "next-intl";
-import { getDomain } from "@/config/domain";
-import BirthdayCardLogo from "@/components/birthday-card/BirthdayCardLogo";
+import { useLocale } from "next-intl";
 
-export default function Footer({ locale }: { locale: string }) {
-  const t = useTranslations("Footer");
+export default function Footer() {
+  const locale = useLocale();
 
-  const domain = getDomain();
-
-  const footerNavigation = {
-    supportOptions: [
-      {
-        name: t("recommend.item.item1"),
-        href: `${domain}/${locale}`,
-      },
-    ],
-    multiLanguage: [{ name: "English", href: domain }],
-
-    legal: [
-      { name: t("legal.item.item1"), href: "/legal/privacy-policy" },
-      { name: t("legal.item.item2"), href: "/legal/terms-of-service" },
-      { name: "Partners", href: "/partners" },
-    ],
-    social: [
-      {
-        name: "Facebook",
-        href: "#",
-        icon: "fontisto:facebook",
-      },
-      {
-        name: "Instagram",
-        href: "#",
-        icon: "fontisto:instagram",
-      },
-      {
-        name: "Twitter",
-        href: "#",
-        icon: "fontisto:twitter",
-      },
-      {
-        name: "GitHub",
-        href: "#",
-        icon: "fontisto:github",
-      },
-    ],
-  };
   return (
-    <footer className="flex w-full flex-col items-center text-black">
-      <div className="max-w-7xl w-full px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-24 text-black mx-auto">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div className="space-y-8 md:pr-8">
-            <div className="flex items-center justify-center xl:justify-start">
-              <BirthdayCardLogo size={32} className="mr-2" />
-              <span className="text-medium font-medium">
-                Birthday Card Generator
-              </span>
-            </div>
-            <p className="text-small text-black text-center xl:text-left">
-              {t("description")}
+    <footer className="bg-[#111] py-20 text-white">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+        <div className="mb-12 grid grid-cols-1 gap-12 border-b border-gray-800 pb-12 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <h2 className="font-serif mb-6 text-5xl">Start creating.</h2>
+            <p className="max-w-sm text-gray-400">
+              Designing meaningful greetings shouldn't be complicated.
             </p>
           </div>
-          <div className="mt-16 grid grid-cols-1 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-4 md:gap-8">
-              <div className="mt-10 md:mt-0">
-                <p className="text-small font-semibold text-center xl:text-left text-black">
-                  {t("recommend.title")}
-                </p>
-                <ul className="mt-6 space-y-4">
-                  {footerNavigation.supportOptions.map((item) => (
-                    <li key={item.name} className="text-center xl:text-left">
-                      <Link className="text-black" href={item.href} size="sm">
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <p className="text-small font-semibold text-center xl:text-left text-black">
-                  {t("multiLanguage.title")}
-                </p>
-                <ul className="mt-6 space-y-4">
-                  {footerNavigation.multiLanguage.map((item) => (
-                    <li key={item.name} className="text-center xl:text-left">
-                      <Link className="text-black" href={item.href} size="sm">
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <p className="text-small font-semibold text-center xl:text-left text-black">
-                  {t("legal.title")}
-                </p>
-                <ul className="mt-6 space-y-4">
-                  {footerNavigation.legal.map((item) => (
-                    <li key={item.name} className="text-center xl:text-left">
-                      <Link className="text-black" href={item.href} size="sm">
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <p className="text-small font-semibold text-center xl:text-left text-black">
-                  {t("contact.title")}
-                </p>
-                <ul className="mt-6 space-y-4">
-                  <li className="text-center xl:text-left">
-                    <Link
-                      href={`mailto:support@${domain.replace("https://", "")}`}
-                      className="text-black text-sm"
-                    >
-                      <Icon icon="mdi:email" className="text-black" /> :
-                      support@{domain.replace("https://", "")}
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
+
+          <div className="md:col-span-3">
+            <h4 className="mb-6 text-xs font-bold tracking-widest text-gray-500 uppercase">
+              Legal
+            </h4>
+            <ul className="space-y-4 text-sm text-gray-300">
+              <li>
+                <a href={`/${locale}/legal/terms-of-service`} className="transition-colors hover:text-white">
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href={`/${locale}/legal/privacy-policy`} className="transition-colors hover:text-white">
+                  Privacy Policy
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-3">
+            <h4 className="mb-6 text-xs font-bold tracking-widest text-gray-500 uppercase">
+              Contact
+            </h4>
+            <ul className="space-y-4 text-sm text-gray-300">
+              <li>
+                <a
+                  href="mailto:support@birthdaycardgenerator.com"
+                  className="transition-colors hover:text-white"
+                >
+                  support@birthdaycardgenerator.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2 pt-4 text-gray-500">
+                <span>🌏</span> Multiple Languages
+              </li>
+            </ul>
           </div>
         </div>
-        <Divider className="mt-16 sm:mt-20 lg:mt-24" />
-        <div className="flex justify-center pt-8">
-          <p className="text-small text-black">
-            &copy; 2025 Birthday Card Generator. All rights reserved.
-          </p>
+
+        <div className="flex flex-col items-end justify-between font-mono text-xs text-gray-500 md:flex-row">
+          <div>
+            &copy; 2024 BirthdayCardGenerator.com
+            <br />
+            All rights reserved.
+          </div>
+          <div className="mt-4 md:mt-0">Designed with minimalism in mind.</div>
         </div>
       </div>
     </footer>

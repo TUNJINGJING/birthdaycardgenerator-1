@@ -10,11 +10,11 @@ export default async function LocaleLayout({
   params: { locale: string };
 }) {
   return (
-    <div className="bg-gradient-to-br from-indigo-100 via-white to-indigo-100">
+    <>
       <Navbar />
       {children}
-      <Footer locale={locale} />
+      <Footer />
       <Toaster richColors position="top-center" theme="light" duration={3000} />
-    </div>
+    </>
   );
 }
