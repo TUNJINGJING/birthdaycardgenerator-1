@@ -5,7 +5,6 @@ import How from "@/components/landingpage/how";
 import Faq from "@/components/landingpage/faq";
 import FeatureHero from "@/components/landingpage/feature";
 import { getMetadata } from "@/components/seo/seo";
-import UserExample from "@/components/landingpage/example";
 import Cta from "@/components/landingpage/cta";
 
 export async function generateMetadata({
@@ -21,28 +20,23 @@ export default function Home({
 }: {
   params: { locale: string };
 }) {
-  const effectId = "2";  // 改为使用 text-to-image 的 effect ID
+  const effectId = "2";
   const multiLanguage = "HomePage";
-  const multiLanguageOfGenerator = "TextToImage";  // 使用 TextToImage 的翻译
+  const multiLanguageOfGenerator = "TextToImage";
   const outputDefaultImage = "/resources/text-to-image.jpg";
 
   return (
-    <main className="flex flex-col items-center bg-[#F2F2F2] text-[#111]">
-      <div className="py-16 w-full">
-        <TopHero multiLanguage={multiLanguage} locale={locale} />
-      </div>
-      <div className="w-full flex justify-center items-center">
-        <WorkerWrapper
-          effectId={effectId}
-          multiLanguage={multiLanguageOfGenerator}
-          outputDefaultImage={outputDefaultImage}
-        />
-      </div>
-      {/* 暂时隐藏示例区域 - 等待真实生日卡片示例
-      <div className="pt-20 md:pt-40">
-        <UserExample multiLanguage={multiLanguage} images={images} />
-      </div>
-      */}
+    <main className="flex-grow">
+      <section id="create" className="py-12 md:py-20">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <TopHero />
+          <WorkerWrapper
+            effectId={effectId}
+            multiLanguage={multiLanguageOfGenerator}
+            outputDefaultImage={outputDefaultImage}
+          />
+        </div>
+      </section>
 
       <div className="pt-20 md:pt-40 w-full">
         <What multiLanguage={multiLanguage} />

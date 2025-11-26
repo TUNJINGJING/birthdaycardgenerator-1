@@ -1,210 +1,147 @@
 "use client";
 
-import type { NavbarProps } from "@nextui-org/react";
-
-import React from "react";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-  Link,
-  cn,
-} from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useAppContext } from "@/contexts/app";
 import Locales from "../../locales";
-import { useLocale } from "next-intl";
 import LoginButton from "@/components/button/login-button";
 import UserButton from "../../button/user-button";
-import { useAppContext } from "@/contexts/app";
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import BirthdayCardLogo from "@/components/birthday-card/BirthdayCardLogo";
 
-const BasicNavbar = React.forwardRef<HTMLElement, NavbarProps>(
-  ({ classNames = {}, ...props }, ref) => {
-    const { data: session } = useSession();
-    const locale = useLocale();
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const { user, setUser } = useAppContext();
-    const [activeTag, setActiveTag] = useState("home");
-    const pathname = usePathname();
-    const t = useTranslations("Nav");
+export default function BasicNavbar() {
+  const { data: session } = useSession();
+  const locale = useLocale();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, setUser } = useAppContext();
+  const [activeTag, setActiveTag] = useState("home");
+  const pathname = usePathname();
+  const t = useTranslations("Nav");
 
-    useEffect(() => {
-      if (session && session.user) {
-        setUser(session.user);
-      }
-      if (pathname.endsWith("/")) {
-        setActiveTag("home");
-      } else if (pathname.includes("text-to-image")) {
-        setActiveTag("text-to-image");
-      } else if (pathname.includes("pricing")) {
-        setActiveTag("pricing");
-      }
-    }, [pathname, session, setUser]);
+  useEffect(() => {
+    if (session && session.user) {
+      setUser(session.user);
+    }
+    if (pathname.endsWith("/")) {
+      setActiveTag("home");
+    } else if (pathname.includes("text-to-image")) {
+      setActiveTag("text-to-image");
+    } else if (pathname.includes("pricing")) {
+      setActiveTag("pricing");
+    } else if (pathname.includes("dashboard")) {
+      setActiveTag("dashboard");
+    }
+  }, [pathname, session, setUser]);
 
-    const handleTagClick = (tag: string) => {
-      setActiveTag(tag);
-      setIsMenuOpen(false); // Close menu after clicking
-    };
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-[#F2F2F2]/95 backdrop-blur-sm transition-all">
+      <div className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-6 md:px-12">
+        {/* Logo */}
+        <a
+          href={`/${locale}`}
+          className="font-serif text-xl font-bold tracking-tight transition-all hover:italic md:text-2xl"
+        >
+          BirthdayCardGenerator<span className="text-gray-400">.com</span>
+        </a>
 
-    return (
-      <Navbar
-        ref={ref}
-        {...props}
-        classNames={{
-          base: cn("border-default-100 bg-transparent text-black"),
-          wrapper:
-            "w-full max-w-7xl lg:px-0 justify-center md:h-[100px] h-[70px]",
-          item: "md:flex", // Removed hidden to show on mobile
-          ...classNames,
-        }}
-        // height="100px"
-        isMenuOpen={isMenuOpen}
-        onMenuOpenChange={setIsMenuOpen}
-      >
-        <NavbarBrand>
-          <BirthdayCardLogo size={44} className="mr-2 mb-1 ml-1" />
-          <p className="text-2xl font-bold hidden lg:block text-blue-700">
-            Birthday Card Generator
-          </p>
-        </NavbarBrand>
-
-        <NavbarContent className="hidden md:flex" justify="center">
-          <NavbarItem onClick={() => handleTagClick("home")}>
-            <Link
-              aria-current="page"
-              className={cn(
-                "text-black mx-4",
-                activeTag === "home" ? "text-black font-bold" : ""
-              )}
+        <div className="flex items-center gap-8 md:gap-12">
+          {/* Desktop Navigation */}
+          <nav className="hidden gap-8 text-xs font-bold tracking-widest text-gray-500 uppercase md:flex">
+            <a
               href={`/${locale}`}
-              size="md"
+              className={activeTag === "home" ? "text-black" : "transition-colors hover:text-black"}
             >
               {t("home")}
-            </Link>
-          </NavbarItem>
-          <NavbarItem onClick={() => handleTagClick("pricing")}>
-            <Link
-              className={cn(
-                "text-black mx-4",
-                activeTag === "text-to-image" ? "text-black font-bold" : ""
-              )}
+            </a>
+            <a
               href={`/${locale}/text-to-image`}
-              size="md"
+              className={activeTag === "text-to-image" ? "text-black" : "transition-colors hover:text-black"}
             >
-              {t("text-to-image")}
-            </Link>
-          </NavbarItem>
-          <NavbarItem onClick={() => handleTagClick("pricing")}>
-            <Link
-              className={cn(
-                "text-black mx-4",
-                activeTag === "pricing" ? "text-black font-bold" : ""
-              )}
+              Create Card
+            </a>
+            <a
               href={`/${locale}/pricing`}
-              size="md"
+              className={activeTag === "pricing" ? "text-black" : "transition-colors hover:text-black"}
             >
               {t("pricing")}
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-
-        <NavbarContent
-          className="hidden md:flex justify-center items-center"
-          justify="end"
-        >
-          <Locales />
-          {user ? (
-            <div className="flex flex-row gap-2">
-              <button className="flex justify-center items-center gap-3 mr-6 hover:scale-110 transition-all duration-300">
-                <a href={`/${locale}/dashboard`}>
-                  My creations
-                  {/* <Icon
-                    icon="lucide:settings-2"
-                    className="w-[1.3em] h-[1.3em] text-black"
-                  /> */}
-                </a>
-              </button>
-              <UserButton />
-            </div>
-          ) : (
-            <LoginButton />
-          )}
-        </NavbarContent>
-
-        <NavbarMenuToggle className="text-black md:hidden" />
-
-        <NavbarMenu
-          className="top-[calc(var(--navbar-height)_-_1px)] max-h-fit bg-white pb-6 pt-6 shadow-medium backdrop-blur-md backdrop-saturate-150 text-black mx-1"
-          motionProps={{
-            initial: { opacity: 0, y: -20 },
-            animate: { opacity: 1, y: 0 },
-            exit: { opacity: 0, y: -20 },
-            transition: {
-              ease: "easeInOut",
-              duration: 0.2,
-            },
-          }}
-        >
-          <div className="flex flex-col w-full px-6">
-            {[
-              { tag: "home", path: "" },
-              { tag: "text-to-image", path: "text-to-image" },
-              { tag: "pricing", path: "pricing" },
-            ].map(({ tag, path }) => (
-              <NavbarMenuItem
-                key={tag}
-                className="w-full"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleTagClick(tag);
-                }}
+            </a>
+            {user && (
+              <a
+                href={`/${locale}/dashboard`}
+                className={activeTag === "dashboard" ? "text-black" : "transition-colors hover:text-black"}
               >
-                <Link
-                  className={cn(
-                    "text-black",
-                    activeTag === tag ? "text-black font-bold" : ""
-                  )}
-                  href={`/${locale}/${path}`}
-                  size="lg"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleTagClick(tag);
-                  }}
-                >
-                  {t(tag)}
-                </Link>
-              </NavbarMenuItem>
-            ))}
+                My Cards
+              </a>
+            )}
+          </nav>
 
-            <div className="flex flex-row gap-2">
-              <button className="flex justify-center items-center gap-3 mr-6 hover:scale-110 transition-all duration-300 pt-2">
-                <a href={`/${locale}/dashboard`}>
-                  My creations
-                  {/* <Icon
-                    icon="lucide:settings-2"
-                    className="w-[1.3em] h-[1.3em] text-black"
-                  /> */}
-                </a>
-              </button>
+          {/* Language & Auth */}
+          <div className="flex items-center gap-6 text-xs font-bold tracking-widest uppercase">
+            <div className="hidden md:block">
+              <Locales />
             </div>
-            <div className="flex flex-col gap-2 mt-4">
-              <div>{user ? <UserButton /> : <LoginButton />}</div>
-            </div>
+
+            {user ? (
+              <UserButton />
+            ) : (
+              <a
+                href="/api/auth/signin"
+                className="border border-black px-6 py-2 transition-colors hover:bg-black hover:text-white"
+              >
+                Sign In
+              </a>
+            )}
           </div>
-        </NavbarMenu>
-      </Navbar>
-    );
-  }
-);
 
-BasicNavbar.displayName = "BasicNavbar";
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden flex flex-col gap-1"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <span className="block h-0.5 w-6 bg-black"></span>
+            <span className="block h-0.5 w-6 bg-black"></span>
+            <span className="block h-0.5 w-6 bg-black"></span>
+          </button>
+        </div>
+      </div>
 
-export default BasicNavbar;
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="border-t border-gray-300 bg-[#F2F2F2] md:hidden">
+          <nav className="flex flex-col gap-4 px-6 py-6 text-sm font-bold uppercase">
+            <a
+              href={`/${locale}`}
+              className={activeTag === "home" ? "text-black" : "text-gray-500"}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t("home")}
+            </a>
+            <a
+              href={`/${locale}/text-to-image`}
+              className={activeTag === "text-to-image" ? "text-black" : "text-gray-500"}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Create Card
+            </a>
+            <a
+              href={`/${locale}/pricing`}
+              className={activeTag === "pricing" ? "text-black" : "text-gray-500"}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t("pricing")}
+            </a>
+            {user && (
+              <a
+                href={`/${locale}/dashboard`}
+                className={activeTag === "dashboard" ? "text-black" : "text-gray-500"}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                My Cards
+              </a>
+            )}
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}

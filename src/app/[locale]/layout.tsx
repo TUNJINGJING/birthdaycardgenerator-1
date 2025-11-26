@@ -20,7 +20,7 @@ export default async function RootLayout({
         <link rel="icon" href="/logo.jpeg" />
       </head>
 
-      <body>
+      <body className="flex min-h-screen flex-col border-t-8 border-[#111] bg-[#F2F2F2] text-[#111]">
         <AppContextProvider>
           <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
             <NextAuthSessionProvider>
