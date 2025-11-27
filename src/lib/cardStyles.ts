@@ -36,28 +36,37 @@ export const calculateFontSize = (text: string, styleKey: CardStyleKey): number 
   const words = text.split(/\s+/);
   const longestWord = Math.max(...words.map(w => w.length));
 
+  // 基础字号
+  let baseSize = 42;
+
   // 如果有超长单词（>15个字符），需要特别处理
   if (longestWord > 15) {
-    // 超长单词需要更小的字号
-    if (len <= 20) return 40;
-    if (len <= 30) return 35;
-    return 30;
+    if (len <= 20) baseSize = 38;
+    else if (len <= 30) baseSize = 32;
+    else baseSize = 28;
   }
-
   // 如果有较长单词（>10个字符），稍微减小字号
-  if (longestWord > 10) {
-    if (len <= 15) return 55;
-    if (len <= 25) return 45;
-    return 38;
+  else if (longestWord > 10) {
+    if (len <= 15) baseSize = 50;
+    else if (len <= 25) baseSize = 42;
+    else baseSize = 36;
+  }
+  // 正常情况的字号计算
+  else {
+    if (len <= 3) baseSize = 140;
+    else if (len <= 6) baseSize = 110;
+    else if (len <= 9) baseSize = 90;
+    else if (len <= 12) baseSize = 75;
+    else if (len <= 15) baseSize = 58;
+    else if (len <= 20) baseSize = 48;
+    else baseSize = 40;
   }
 
-  // 正常情况的字号计算
-  if (len <= 3) return 150;
-  if (len <= 6) return 120;
-  if (len <= 9) return 100;
-  if (len <= 12) return 80;
-  if (len <= 15) return 60;
-  if (len <= 20) return 50;
-  return 42;
+  // Playful 风格因为是全大写且粗体，字号需要减小防止溢出
+  if (styleKey === 'playful') {
+    baseSize = baseSize * 0.85;
+  }
+
+  return baseSize;
 };
 

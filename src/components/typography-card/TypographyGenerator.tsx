@@ -48,12 +48,19 @@ export default function TypographyGenerator() {
         useCORS: true,
         backgroundColor: null,
         logging: false,
-        // 修复文字偏移问题
+        // 修复文字偏移和样式问题
         onclone: (documentClone) => {
-          const element = documentClone.querySelector('.card-canvas');
-          if (element instanceof HTMLElement) {
-            // 在截图瞬间微调样式，抵消浏览器渲染差异
-            element.style.transform = 'translateZ(0)'; // 强制GPU渲染
+          const canvas = documentClone.querySelector('.card-canvas');
+          if (canvas instanceof HTMLElement) {
+            // 强制GPU渲染，避免文字偏移
+            canvas.style.transform = 'translateZ(0)';
+            canvas.style.willChange = 'auto';
+          }
+
+          // 移除外层缩放，确保下载图片和预览一致
+          const scaleContainer = documentClone.querySelector('.origin-center');
+          if (scaleContainer instanceof HTMLElement) {
+            scaleContainer.style.transform = 'none';
           }
         }
       });
@@ -179,10 +186,9 @@ export default function TypographyGenerator() {
                     style={{
                       fontSize: `${fontSize}px`,
                       lineHeight: styleKey === 'elegant' ? 1.2 : 1.1,
-                      wordBreak: 'normal',
-                      overflowWrap: 'anywhere', // 更激进的换行策略
-                      whiteSpace: 'pre-wrap',
-                      hyphens: 'auto'
+                      wordBreak: 'keep-all',
+                      overflowWrap: 'break-word',
+                      whiteSpace: 'normal'
                     }}
                   >
                     {name}
