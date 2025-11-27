@@ -1,4 +1,4 @@
-import WorkerWrapper from "@/components/replicate/text-to-image/worker-wraper";
+import TypographyGenerator from "@/components/typography-card/TypographyGenerator";
 import TopHero from "@/components/landingpage/top";
 import { getMetadata } from "@/components/seo/seo";
 
@@ -15,22 +15,14 @@ export default function Home({
 }: {
   params: { locale: string };
 }) {
-  const effectId = "2";
-  const multiLanguageOfGenerator = "TextToImage";
-  const outputDefaultImage = "/resources/text-to-image.jpg";
-
   return (
     <main className="flex-grow">
-      {/* Hero Section with Generator */}
+      {/* Hero Section with Typography Generator */}
       <section className="py-12 md:py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           <TopHero />
           <div className="mt-16">
-            <WorkerWrapper
-              effectId={effectId}
-              multiLanguage={multiLanguageOfGenerator}
-              outputDefaultImage={outputDefaultImage}
-            />
+            <TypographyGenerator />
           </div>
         </div>
       </section>
