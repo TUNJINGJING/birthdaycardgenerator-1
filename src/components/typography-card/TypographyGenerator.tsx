@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import html2canvas from 'html2canvas';
+import { snapToPng } from '@zumer/snapdom';
 import { toast } from 'sonner';
 import { CARD_STYLES, CardStyleKey, calculateFontSize } from '@/lib/cardStyles';
 
@@ -31,7 +31,7 @@ export default function TypographyGenerator() {
 
   const currentStyle = CARD_STYLES[styleKey];
 
-  // 下载功能（优化版：修复文字偏移问题）
+  // 下载功能（使用 snapdom - 快速且准确的所见即所得）
   const handleDownload = async () => {
     if (!canvasRef.current) return;
 
@@ -40,78 +40,23 @@ export default function TypographyGenerator() {
       // 确保字体已加载
       await document.fonts.ready;
 
-      // 【重要】再等待一段时间确保 Google Fonts 完全渲染
-      // html2canvas 截图时需要字体已经完全应用到 DOM
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // 等待一小段时间确保 Google Fonts 完全渲染
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const canvas = await html2canvas(canvasRef.current, {
-        scale: 3, // 3倍分辨率，确保高清
-        useCORS: true,
-        backgroundColor: null,
-        logging: false,
-        // 【简化版】由于使用内联样式，只需复制字体和transform
-        onclone: (documentClone) => {
-          // 移除外层缩放，确保下载图片和预览一致
-          const scaleContainer = documentClone.querySelector('.origin-center');
-          if (scaleContainer instanceof HTMLElement) {
-            scaleContainer.style.transform = 'none';
-          }
-
-          // 复制名字元素的字体和transform（旋转）
-          const nameElement = documentClone.querySelector('.card-canvas h1');
-          const originalH1 = canvasRef.current?.querySelector('h1');
-          if (nameElement instanceof HTMLElement && originalH1) {
-            const computedStyle = window.getComputedStyle(originalH1);
-
-            // 字体属性（确保Google Fonts正确渲染）
-            nameElement.style.fontFamily = computedStyle.fontFamily;
-            nameElement.style.fontWeight = computedStyle.fontWeight;
-            nameElement.style.fontStyle = computedStyle.fontStyle;
-            nameElement.style.fontSize = computedStyle.fontSize;
-            nameElement.style.lineHeight = computedStyle.lineHeight;
-            nameElement.style.letterSpacing = computedStyle.letterSpacing;
-            nameElement.style.textTransform = computedStyle.textTransform;
-
-            // Transform（旋转效果）
-            nameElement.style.transform = computedStyle.transform;
-          }
-
-          // 复制祝福语元素的字体和transform
-          const messageElement = documentClone.querySelector('.card-canvas p');
-          const originalMsg = canvasRef.current?.querySelector('p');
-          if (messageElement instanceof HTMLElement && originalMsg) {
-            const computedStyle = window.getComputedStyle(originalMsg);
-
-            // 字体属性
-            messageElement.style.fontFamily = computedStyle.fontFamily;
-            messageElement.style.fontWeight = computedStyle.fontWeight;
-            messageElement.style.fontStyle = computedStyle.fontStyle;
-            messageElement.style.fontSize = computedStyle.fontSize;
-            messageElement.style.lineHeight = computedStyle.lineHeight;
-
-            // Transform（旋转效果）
-            messageElement.style.transform = computedStyle.transform;
-
-            // 其他布局属性
-            messageElement.style.padding = computedStyle.padding;
-            messageElement.style.display = computedStyle.display;
-            messageElement.style.opacity = computedStyle.opacity;
-          }
-        }
+      // 使用 snapdom 捕获元素 - 自动保留所有样式！
+      const dataUrl = await snapToPng(canvasRef.current, {
+        width: 1200,  // 高分辨率输出 (3x 400px)
+        height: 1500, // 高分辨率输出 (3x 500px)
+        quality: 1.0  // 最高质量
       });
 
-      // 转换为图片并下载
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `birthday-card-${name.toLowerCase().replace(/\s+/g, '-')}.png`;
-          link.click();
-          URL.revokeObjectURL(url);
-          toast.success('Card downloaded successfully!');
-        }
-      }, 'image/png');
+      // 下载图片
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `birthday-card-${name.toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.click();
+
+      toast.success('Card downloaded successfully!');
     } catch (error) {
       console.error('Download error:', error);
       toast.error('Failed to download card');
