@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { snapToPng } from '@zumer/snapdom';
+import { toPng } from '@zumer/snapdom';
 import { toast } from 'sonner';
 import { CARD_STYLES, CardStyleKey, calculateFontSize } from '@/lib/cardStyles';
 
@@ -44,7 +44,7 @@ export default function TypographyGenerator() {
       await new Promise(resolve => setTimeout(resolve, 300));
 
       // 使用 snapdom 捕获元素 - 自动保留所有样式！
-      const dataUrl = await snapToPng(canvasRef.current, {
+      const img = await toPng(canvasRef.current, {
         width: 1200,  // 高分辨率输出 (3x 400px)
         height: 1500, // 高分辨率输出 (3x 500px)
         quality: 1.0  // 最高质量
@@ -52,7 +52,7 @@ export default function TypographyGenerator() {
 
       // 下载图片
       const link = document.createElement('a');
-      link.href = dataUrl;
+      link.href = img.src;
       link.download = `birthday-card-${name.toLowerCase().replace(/\s+/g, '-')}.png`;
       link.click();
 
