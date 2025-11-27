@@ -1,4 +1,3 @@
-import WorkerWrapper from "@/components/replicate/text-to-image/worker-wraper";
 import TopHero from "@/components/landingpage/top";
 import { getMetadata } from "@/components/seo/seo";
 
@@ -15,22 +14,12 @@ export default function Home({
 }: {
   params: { locale: string };
 }) {
-  const effectId = "2";
-  const multiLanguage = "HomePage";
-  const multiLanguageOfGenerator = "TextToImage";
-  const outputDefaultImage = "/resources/text-to-image.jpg";
-
   return (
     <main className="flex-grow">
-      {/* Create Card Section */}
-      <section id="create" className="py-12 md:py-20">
+      {/* Hero Section */}
+      <section className="py-12 md:py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           <TopHero />
-          <WorkerWrapper
-            effectId={effectId}
-            multiLanguage={multiLanguageOfGenerator}
-            outputDefaultImage={outputDefaultImage}
-          />
         </div>
       </section>
 
@@ -96,9 +85,12 @@ export default function Home({
                   <li>• Standard styles</li>
                   <li>• Web quality</li>
                 </ul>
-                <button className="border-b border-black pb-1 text-sm font-bold tracking-widest uppercase">
+                <a
+                  href={`/${locale}/ai-card`}
+                  className="inline-block border-b border-black pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:text-gray-600"
+                >
                   Start Free
-                </button>
+                </a>
               </div>
 
               {/* Pro Plan */}
@@ -110,9 +102,12 @@ export default function Home({
                   <li>• High-Res Print Ready (PDF)</li>
                   <li>• All premium fonts</li>
                 </ul>
-                <button className="border-b border-white pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:border-gray-300 hover:text-gray-300">
+                <a
+                  href={`/${locale}/pricing`}
+                  className="inline-block border-b border-white pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:border-gray-300 hover:text-gray-300"
+                >
                   Get Started
-                </button>
+                </a>
               </div>
             </div>
           </div>

@@ -24,6 +24,8 @@ export default function BasicNavbar() {
     }
     if (pathname.endsWith("/")) {
       setActiveTag("home");
+    } else if (pathname.includes("ai-card")) {
+      setActiveTag("ai-card");
     } else if (pathname.includes("text-to-image")) {
       setActiveTag("text-to-image");
     } else if (pathname.includes("pricing")) {
@@ -54,10 +56,10 @@ export default function BasicNavbar() {
               {t("home")}
             </a>
             <a
-              href={`/${locale}/text-to-image`}
-              className={activeTag === "text-to-image" ? "text-black" : "transition-colors hover:text-black"}
+              href={`/${locale}/ai-card`}
+              className={activeTag === "ai-card" ? "text-black" : "transition-colors hover:text-black"}
             >
-              Create Card
+              AI Card
             </a>
             <a
               href={`/${locale}/pricing`}
@@ -84,12 +86,7 @@ export default function BasicNavbar() {
             {user ? (
               <UserButton />
             ) : (
-              <a
-                href="/api/auth/signin"
-                className="border border-black px-6 py-2 transition-colors hover:bg-black hover:text-white"
-              >
-                Sign In
-              </a>
+              <LoginButton />
             )}
           </div>
 
@@ -117,11 +114,11 @@ export default function BasicNavbar() {
               {t("home")}
             </a>
             <a
-              href={`/${locale}/text-to-image`}
-              className={activeTag === "text-to-image" ? "text-black" : "text-gray-500"}
+              href={`/${locale}/ai-card`}
+              className={activeTag === "ai-card" ? "text-black" : "text-gray-500"}
               onClick={() => setIsMenuOpen(false)}
             >
-              Create Card
+              AI Card
             </a>
             <a
               href={`/${locale}/pricing`}
