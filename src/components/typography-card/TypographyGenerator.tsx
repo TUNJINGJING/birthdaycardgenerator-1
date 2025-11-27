@@ -49,7 +49,7 @@ export default function TypographyGenerator() {
         useCORS: true,
         backgroundColor: null,
         logging: false,
-        // 【完整修复】复制所有视觉属性，确保下载和预览完全一致
+        // 【简化版】由于使用内联样式，只需复制字体和transform
         onclone: (documentClone) => {
           // 移除外层缩放，确保下载图片和预览一致
           const scaleContainer = documentClone.querySelector('.origin-center');
@@ -57,29 +57,13 @@ export default function TypographyGenerator() {
             scaleContainer.style.transform = 'none';
           }
 
-          // 1. 修复画布容器的背景色和所有视觉属性
-          const canvasEl = documentClone.querySelector('.card-canvas');
-          const originalCanvas = canvasRef.current;
-          if (canvasEl instanceof HTMLElement && originalCanvas) {
-            const computedCanvas = window.getComputedStyle(originalCanvas);
-
-            // 复制所有关键视觉属性
-            canvasEl.style.backgroundColor = computedCanvas.backgroundColor;
-            canvasEl.style.color = computedCanvas.color;
-            canvasEl.style.padding = computedCanvas.padding;
-            canvasEl.style.display = computedCanvas.display;
-            canvasEl.style.flexDirection = computedCanvas.flexDirection;
-            canvasEl.style.justifyContent = computedCanvas.justifyContent;
-            canvasEl.style.alignItems = computedCanvas.alignItems;
-          }
-
-          // 2. 修复名字元素的所有属性（包括transform旋转）
+          // 复制名字元素的字体和transform（旋转）
           const nameElement = documentClone.querySelector('.card-canvas h1');
           const originalH1 = canvasRef.current?.querySelector('h1');
           if (nameElement instanceof HTMLElement && originalH1) {
             const computedStyle = window.getComputedStyle(originalH1);
 
-            // 字体属性
+            // 字体属性（确保Google Fonts正确渲染）
             nameElement.style.fontFamily = computedStyle.fontFamily;
             nameElement.style.fontWeight = computedStyle.fontWeight;
             nameElement.style.fontStyle = computedStyle.fontStyle;
@@ -88,16 +72,11 @@ export default function TypographyGenerator() {
             nameElement.style.letterSpacing = computedStyle.letterSpacing;
             nameElement.style.textTransform = computedStyle.textTransform;
 
-            // 关键：复制transform（旋转效果）
+            // Transform（旋转效果）
             nameElement.style.transform = computedStyle.transform;
-
-            // 布局和视觉属性
-            nameElement.style.color = computedStyle.color;
-            nameElement.style.textAlign = computedStyle.textAlign;
-            nameElement.style.padding = computedStyle.padding;
           }
 
-          // 3. 修复祝福语元素的所有属性（包括背景色和旋转）
+          // 复制祝福语元素的字体和transform
           const messageElement = documentClone.querySelector('.card-canvas p');
           const originalMsg = canvasRef.current?.querySelector('p');
           if (messageElement instanceof HTMLElement && originalMsg) {
@@ -109,44 +88,14 @@ export default function TypographyGenerator() {
             messageElement.style.fontStyle = computedStyle.fontStyle;
             messageElement.style.fontSize = computedStyle.fontSize;
             messageElement.style.lineHeight = computedStyle.lineHeight;
-            messageElement.style.letterSpacing = computedStyle.letterSpacing;
 
-            // 关键：复制背景色（Playful风格的黑底白字效果）
-            messageElement.style.backgroundColor = computedStyle.backgroundColor;
-            messageElement.style.color = computedStyle.color;
-
-            // 关键：复制transform（旋转效果）
+            // Transform（旋转效果）
             messageElement.style.transform = computedStyle.transform;
 
-            // 布局属性
+            // 其他布局属性
             messageElement.style.padding = computedStyle.padding;
-            messageElement.style.margin = computedStyle.margin;
             messageElement.style.display = computedStyle.display;
-            messageElement.style.textAlign = computedStyle.textAlign;
             messageElement.style.opacity = computedStyle.opacity;
-            messageElement.style.borderTop = computedStyle.borderTop;
-          }
-
-          // 4. 修复名字容器和祝福语容器的布局
-          const nameContainer = documentClone.querySelector('.card-canvas > div:first-of-type');
-          const originalNameContainer = canvasRef.current?.querySelector('.card-canvas > div:first-of-type');
-          if (nameContainer instanceof HTMLElement && originalNameContainer) {
-            const computed = window.getComputedStyle(originalNameContainer);
-            nameContainer.style.display = computed.display;
-            nameContainer.style.alignItems = computed.alignItems;
-            nameContainer.style.justifyContent = computed.justifyContent;
-            nameContainer.style.width = computed.width;
-          }
-
-          const msgContainer = documentClone.querySelector('.card-canvas > div:last-of-type');
-          const originalMsgContainer = canvasRef.current?.querySelector('.card-canvas > div:last-of-type');
-          if (msgContainer instanceof HTMLElement && originalMsgContainer) {
-            const computed = window.getComputedStyle(originalMsgContainer);
-            msgContainer.style.display = computed.display;
-            msgContainer.style.justifyContent = computed.justifyContent;
-            msgContainer.style.textAlign = computed.textAlign;
-            msgContainer.style.maxWidth = computed.maxWidth;
-            msgContainer.style.margin = computed.margin;
           }
         }
       });
@@ -258,6 +207,10 @@ export default function TypographyGenerator() {
               <div
                 ref={canvasRef}
                 className={`card-canvas relative w-[400px] h-[500px] shadow-2xl transition-all duration-500 ease-in-out overflow-hidden ${currentStyle.container}`}
+                style={{
+                  backgroundColor: currentStyle.backgroundColor,
+                  color: currentStyle.textColor
+                }}
               >
                 {/* 名字区域：根据风格调整对齐和换行 */}
                 <div className={`flex-grow flex items-center w-full z-10 ${
@@ -290,7 +243,11 @@ export default function TypographyGenerator() {
                     className={`${currentStyle.msgFont} ${
                       styleKey === 'playful' ? 'transform rotate-1' : ''
                     }`}
-                    style={{ whiteSpace: 'pre-wrap' }}
+                    style={{
+                      whiteSpace: 'pre-wrap',
+                      backgroundColor: currentStyle.messageBgColor,
+                      color: currentStyle.messageTextColor
+                    }}
                   >
                     {message}
                   </p>

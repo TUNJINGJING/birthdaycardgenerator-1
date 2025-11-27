@@ -2,27 +2,45 @@
 export const CARD_STYLES = {
   minimalist: {
     name: "Minimalist",
-    container: "bg-white text-black flex flex-col justify-center items-center text-center p-12 border-4 border-double border-gray-100",
+    // 移除 bg-white，使用内联样式
+    container: "text-black flex flex-col justify-center items-center text-center p-12 border-4 border-double border-gray-100",
     nameFont: "font-serif italic",
     msgFont: "font-sans uppercase tracking-widest text-xs mt-8",
     accentColor: "text-gray-400",
-    nameAlign: "center" as const
+    nameAlign: "center" as const,
+    // 新增：直接使用颜色值
+    backgroundColor: "#FFFFFF",
+    textColor: "#000000",
+    messageBgColor: "transparent",
+    messageTextColor: "#000000"
   },
   playful: {
     name: "Playful",
-    container: "bg-[#FFEB3B] text-black flex flex-col justify-center items-center text-center p-8",
+    // 移除 bg-[#FFEB3B] 和 bg-black，使用内联样式
+    container: "text-black flex flex-col justify-center items-center text-center p-8",
     nameFont: "font-sans font-black uppercase tracking-tighter leading-none",
-    msgFont: "font-serif font-bold text-lg mt-6 bg-black text-white px-4 py-1 inline-block",
+    msgFont: "font-serif font-bold text-lg mt-6 px-4 py-1 inline-block",
     accentColor: "text-black",
-    nameAlign: "center" as const
+    nameAlign: "center" as const,
+    // 新增：直接使用颜色值
+    backgroundColor: "#FFEB3B",
+    textColor: "#000000",
+    messageBgColor: "#000000",
+    messageTextColor: "#FFFFFF"
   },
   elegant: {
     name: "Elegant",
-    container: "bg-[#111] text-white flex flex-col justify-between items-start text-left p-16",
+    // 移除 bg-[#111] 和 text-white，使用内联样式
+    container: "flex flex-col justify-between items-start text-left p-16",
     nameFont: "font-serif font-normal italic leading-[1.2]",
     msgFont: "font-sans font-light text-sm opacity-70 tracking-wide border-t border-gray-700 pt-4 mt-8 w-full text-left",
     accentColor: "text-gray-500",
-    nameAlign: "left" as const
+    nameAlign: "left" as const,
+    // 新增：直接使用颜色值
+    backgroundColor: "#111111",
+    textColor: "#FFFFFF",
+    messageBgColor: "transparent",
+    messageTextColor: "#FFFFFF"
   }
 } as const;
 
