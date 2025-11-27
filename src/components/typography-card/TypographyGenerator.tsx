@@ -40,8 +40,9 @@ export default function TypographyGenerator() {
       // 确保字体已加载
       await document.fonts.ready;
 
-      // 等待一小段时间让样式完全应用
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // 【重要】再等待一段时间确保 Google Fonts 完全渲染
+      // html2canvas 截图时需要字体已经完全应用到 DOM
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const canvas = await html2canvas(canvasRef.current, {
         scale: 3, // 3倍分辨率，确保高清
@@ -50,17 +51,49 @@ export default function TypographyGenerator() {
         logging: false,
         // 修复文字偏移和样式问题
         onclone: (documentClone) => {
-          const canvas = documentClone.querySelector('.card-canvas');
-          if (canvas instanceof HTMLElement) {
+          const canvasEl = documentClone.querySelector('.card-canvas');
+          if (canvasEl instanceof HTMLElement) {
             // 强制GPU渲染，避免文字偏移
-            canvas.style.transform = 'translateZ(0)';
-            canvas.style.willChange = 'auto';
+            canvasEl.style.transform = 'translateZ(0)';
+            canvasEl.style.willChange = 'auto';
           }
 
           // 移除外层缩放，确保下载图片和预览一致
           const scaleContainer = documentClone.querySelector('.origin-center');
           if (scaleContainer instanceof HTMLElement) {
             scaleContainer.style.transform = 'none';
+          }
+
+          // 【关键修复】强制重新应用字体样式，修复 html2canvas 字体丢失问题
+          const nameElement = documentClone.querySelector('.card-canvas h1');
+          if (nameElement instanceof HTMLElement) {
+            // 读取原始元素的计算样式
+            const originalElement = canvasRef.current?.querySelector('h1');
+            if (originalElement) {
+              const computedStyle = window.getComputedStyle(originalElement);
+
+              // 强制应用所有字体相关属性
+              nameElement.style.fontFamily = computedStyle.fontFamily;
+              nameElement.style.fontWeight = computedStyle.fontWeight;
+              nameElement.style.fontStyle = computedStyle.fontStyle;
+              nameElement.style.fontSize = computedStyle.fontSize;
+              nameElement.style.lineHeight = computedStyle.lineHeight;
+              nameElement.style.letterSpacing = computedStyle.letterSpacing;
+              nameElement.style.textTransform = computedStyle.textTransform;
+            }
+          }
+
+          // 同样修复祝福语的字体
+          const messageElement = documentClone.querySelector('.card-canvas p');
+          if (messageElement instanceof HTMLElement) {
+            const originalMsg = canvasRef.current?.querySelector('p');
+            if (originalMsg) {
+              const computedStyle = window.getComputedStyle(originalMsg);
+              messageElement.style.fontFamily = computedStyle.fontFamily;
+              messageElement.style.fontWeight = computedStyle.fontWeight;
+              messageElement.style.fontStyle = computedStyle.fontStyle;
+              messageElement.style.fontSize = computedStyle.fontSize;
+            }
           }
         }
       });
