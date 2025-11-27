@@ -3,50 +3,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { toast } from 'sonner';
-
-// 定义三种风格的配置
-const STYLES = {
-  minimalist: {
-    name: "Minimalist",
-    container: "bg-white text-black flex flex-col justify-center items-center text-center p-12 border-4 border-double border-gray-100",
-    nameFont: "font-serif italic",
-    msgFont: "font-sans uppercase tracking-widest text-xs mt-8",
-    accentColor: "text-gray-400"
-  },
-  playful: {
-    name: "Playful",
-    container: "bg-[#FFEB3B] text-black flex flex-col justify-center items-center text-center p-8 rotate-1",
-    nameFont: "font-sans font-black uppercase tracking-tighter leading-none transform -rotate-2",
-    msgFont: "font-serif font-bold text-lg mt-6 bg-black text-white px-4 py-1 transform rotate-1",
-    accentColor: "text-black"
-  },
-  elegant: {
-    name: "Elegant",
-    container: "bg-[#111] text-white flex flex-col justify-between items-start text-left p-16",
-    nameFont: "font-serif font-normal italic leading-snug",
-    msgFont: "font-sans font-light text-sm opacity-70 tracking-wide border-t border-gray-700 pt-4 w-full text-left",
-    accentColor: "text-gray-500"
-  }
-};
+import { CARD_STYLES, CardStyleKey, calculateFontSize } from '@/lib/cardStyles';
 
 export default function TypographyGenerator() {
   // 状态管理
   const [name, setName] = useState('Alex');
   const [message, setMessage] = useState('Wishing you the best.');
-  const [styleKey, setStyleKey] = useState<keyof typeof STYLES>('minimalist');
+  const [styleKey, setStyleKey] = useState<CardStyleKey>('minimalist');
   const [fontSize, setFontSize] = useState(100);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  // 动态计算字号的算法
+  // 动态计算字号的算法（优化版）
   useEffect(() => {
-    const length = name.length;
-
-    if (length <= 4) setFontSize(140);
-    else if (length <= 8) setFontSize(100);
-    else if (length <= 12) setFontSize(70);
-    else setFontSize(50);
+    setFontSize(calculateFontSize(name));
   }, [name]);
 
   // 等待字体加载
@@ -58,9 +29,9 @@ export default function TypographyGenerator() {
     }
   }, []);
 
-  const currentStyle = STYLES[styleKey];
+  const currentStyle = CARD_STYLES[styleKey];
 
-  // 下载功能
+  // 下载功能（优化版：修复文字偏移问题）
   const handleDownload = async () => {
     if (!canvasRef.current) return;
 
@@ -77,6 +48,14 @@ export default function TypographyGenerator() {
         useCORS: true,
         backgroundColor: null,
         logging: false,
+        // 修复文字偏移问题
+        onclone: (documentClone) => {
+          const element = documentClone.querySelector('.card-canvas');
+          if (element instanceof HTMLElement) {
+            // 在截图瞬间微调样式，抵消浏览器渲染差异
+            element.style.transform = 'translateZ(0)'; // 强制GPU渲染
+          }
+        }
       });
 
       // 转换为图片并下载
@@ -124,7 +103,7 @@ export default function TypographyGenerator() {
               02 / Style
             </label>
             <div className="flex gap-2">
-              {(Object.keys(STYLES) as Array<keyof typeof STYLES>).map((key) => (
+              {(Object.keys(CARD_STYLES) as Array<CardStyleKey>).map((key) => (
                 <button
                   key={key}
                   onClick={() => setStyleKey(key)}
@@ -134,7 +113,7 @@ export default function TypographyGenerator() {
                       : 'border border-gray-300 text-gray-500 hover:border-black hover:text-black'
                   }`}
                 >
-                  {STYLES[key].name}
+                  {CARD_STYLES[key].name}
                 </button>
               ))}
             </div>
@@ -179,33 +158,40 @@ export default function TypographyGenerator() {
             <span>1080 x 1350 px (4:5)</span>
           </div>
 
-          {/* 画布容器 */}
-          <div className="flex-grow flex items-center justify-center">
-            <div
-              ref={canvasRef}
-              className={`relative w-[400px] h-[500px] shadow-2xl transition-all duration-500 ease-in-out overflow-hidden ${currentStyle.container}`}
-            >
-              {/* 名字区域：应用动态字号 */}
-              <div className="flex-grow flex items-center justify-center w-full z-10">
-                <h1
-                  className={`${currentStyle.nameFont} break-words w-full px-4`}
-                  style={{ fontSize: `${fontSize}px`, lineHeight: 1.1 }}
-                >
-                  {name}
-                  <span className="text-[#FF4500]">.</span>
-                </h1>
-              </div>
+          {/* 画布容器 - 添加响应式缩放 */}
+          <div className="flex-grow flex items-center justify-center w-full overflow-hidden p-4">
+            {/* 缩放容器：移动端自动缩小，桌面端原始大小 */}
+            <div className="origin-center transform scale-[0.7] sm:scale-[0.85] md:scale-100 transition-transform">
+              <div
+                ref={canvasRef}
+                className={`card-canvas relative w-[400px] h-[500px] shadow-2xl transition-all duration-500 ease-in-out overflow-hidden ${currentStyle.container}`}
+              >
+                {/* 名字区域：应用动态字号 + 修复换行问题 */}
+                <div className="flex-grow flex items-center justify-center w-full z-10">
+                  <h1
+                    className={`${currentStyle.nameFont} w-full px-4 max-w-full`}
+                    style={{
+                      fontSize: `${fontSize}px`,
+                      lineHeight: 1.1,
+                      wordBreak: 'keep-all',
+                      overflowWrap: 'break-word',
+                      whiteSpace: 'pre-wrap'
+                    }}
+                  >
+                    {name}
+                    <span className="text-[#FF4500]">.</span>
+                  </h1>
+                </div>
 
-              {/* 祝福语区域 */}
-              <div className={`z-10 mb-8 ${styleKey === 'elegant' ? 'w-full' : 'max-w-[80%] mx-auto'}`}>
-                <p className={currentStyle.msgFont}>
-                  {message}
-                </p>
-              </div>
-
-              {/* 装饰水印 */}
-              <div className={`absolute -bottom-10 -right-10 text-[10rem] font-serif opacity-10 pointer-events-none select-none ${currentStyle.accentColor}`}>
-                Aa
+                {/* 祝福语区域 - 保留换行符 */}
+                <div className={`z-10 mb-8 ${styleKey === 'elegant' ? 'w-full' : 'max-w-[80%] mx-auto'}`}>
+                  <p
+                    className={currentStyle.msgFont}
+                    style={{ whiteSpace: 'pre-wrap' }}
+                  >
+                    {message}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
