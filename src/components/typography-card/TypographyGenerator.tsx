@@ -49,51 +49,104 @@ export default function TypographyGenerator() {
         useCORS: true,
         backgroundColor: null,
         logging: false,
-        // 修复文字偏移和样式问题
+        // 【完整修复】复制所有视觉属性，确保下载和预览完全一致
         onclone: (documentClone) => {
-          const canvasEl = documentClone.querySelector('.card-canvas');
-          if (canvasEl instanceof HTMLElement) {
-            // 强制GPU渲染，避免文字偏移
-            canvasEl.style.transform = 'translateZ(0)';
-            canvasEl.style.willChange = 'auto';
-          }
-
           // 移除外层缩放，确保下载图片和预览一致
           const scaleContainer = documentClone.querySelector('.origin-center');
           if (scaleContainer instanceof HTMLElement) {
             scaleContainer.style.transform = 'none';
           }
 
-          // 【关键修复】强制重新应用字体样式，修复 html2canvas 字体丢失问题
-          const nameElement = documentClone.querySelector('.card-canvas h1');
-          if (nameElement instanceof HTMLElement) {
-            // 读取原始元素的计算样式
-            const originalElement = canvasRef.current?.querySelector('h1');
-            if (originalElement) {
-              const computedStyle = window.getComputedStyle(originalElement);
+          // 1. 修复画布容器的背景色和所有视觉属性
+          const canvasEl = documentClone.querySelector('.card-canvas');
+          const originalCanvas = canvasRef.current;
+          if (canvasEl instanceof HTMLElement && originalCanvas) {
+            const computedCanvas = window.getComputedStyle(originalCanvas);
 
-              // 强制应用所有字体相关属性
-              nameElement.style.fontFamily = computedStyle.fontFamily;
-              nameElement.style.fontWeight = computedStyle.fontWeight;
-              nameElement.style.fontStyle = computedStyle.fontStyle;
-              nameElement.style.fontSize = computedStyle.fontSize;
-              nameElement.style.lineHeight = computedStyle.lineHeight;
-              nameElement.style.letterSpacing = computedStyle.letterSpacing;
-              nameElement.style.textTransform = computedStyle.textTransform;
-            }
+            // 复制所有关键视觉属性
+            canvasEl.style.backgroundColor = computedCanvas.backgroundColor;
+            canvasEl.style.color = computedCanvas.color;
+            canvasEl.style.padding = computedCanvas.padding;
+            canvasEl.style.display = computedCanvas.display;
+            canvasEl.style.flexDirection = computedCanvas.flexDirection;
+            canvasEl.style.justifyContent = computedCanvas.justifyContent;
+            canvasEl.style.alignItems = computedCanvas.alignItems;
           }
 
-          // 同样修复祝福语的字体
+          // 2. 修复名字元素的所有属性（包括transform旋转）
+          const nameElement = documentClone.querySelector('.card-canvas h1');
+          const originalH1 = canvasRef.current?.querySelector('h1');
+          if (nameElement instanceof HTMLElement && originalH1) {
+            const computedStyle = window.getComputedStyle(originalH1);
+
+            // 字体属性
+            nameElement.style.fontFamily = computedStyle.fontFamily;
+            nameElement.style.fontWeight = computedStyle.fontWeight;
+            nameElement.style.fontStyle = computedStyle.fontStyle;
+            nameElement.style.fontSize = computedStyle.fontSize;
+            nameElement.style.lineHeight = computedStyle.lineHeight;
+            nameElement.style.letterSpacing = computedStyle.letterSpacing;
+            nameElement.style.textTransform = computedStyle.textTransform;
+
+            // 关键：复制transform（旋转效果）
+            nameElement.style.transform = computedStyle.transform;
+
+            // 布局和视觉属性
+            nameElement.style.color = computedStyle.color;
+            nameElement.style.textAlign = computedStyle.textAlign;
+            nameElement.style.padding = computedStyle.padding;
+          }
+
+          // 3. 修复祝福语元素的所有属性（包括背景色和旋转）
           const messageElement = documentClone.querySelector('.card-canvas p');
-          if (messageElement instanceof HTMLElement) {
-            const originalMsg = canvasRef.current?.querySelector('p');
-            if (originalMsg) {
-              const computedStyle = window.getComputedStyle(originalMsg);
-              messageElement.style.fontFamily = computedStyle.fontFamily;
-              messageElement.style.fontWeight = computedStyle.fontWeight;
-              messageElement.style.fontStyle = computedStyle.fontStyle;
-              messageElement.style.fontSize = computedStyle.fontSize;
-            }
+          const originalMsg = canvasRef.current?.querySelector('p');
+          if (messageElement instanceof HTMLElement && originalMsg) {
+            const computedStyle = window.getComputedStyle(originalMsg);
+
+            // 字体属性
+            messageElement.style.fontFamily = computedStyle.fontFamily;
+            messageElement.style.fontWeight = computedStyle.fontWeight;
+            messageElement.style.fontStyle = computedStyle.fontStyle;
+            messageElement.style.fontSize = computedStyle.fontSize;
+            messageElement.style.lineHeight = computedStyle.lineHeight;
+            messageElement.style.letterSpacing = computedStyle.letterSpacing;
+
+            // 关键：复制背景色（Playful风格的黑底白字效果）
+            messageElement.style.backgroundColor = computedStyle.backgroundColor;
+            messageElement.style.color = computedStyle.color;
+
+            // 关键：复制transform（旋转效果）
+            messageElement.style.transform = computedStyle.transform;
+
+            // 布局属性
+            messageElement.style.padding = computedStyle.padding;
+            messageElement.style.margin = computedStyle.margin;
+            messageElement.style.display = computedStyle.display;
+            messageElement.style.textAlign = computedStyle.textAlign;
+            messageElement.style.opacity = computedStyle.opacity;
+            messageElement.style.borderTop = computedStyle.borderTop;
+          }
+
+          // 4. 修复名字容器和祝福语容器的布局
+          const nameContainer = documentClone.querySelector('.card-canvas > div:first-of-type');
+          const originalNameContainer = canvasRef.current?.querySelector('.card-canvas > div:first-of-type');
+          if (nameContainer instanceof HTMLElement && originalNameContainer) {
+            const computed = window.getComputedStyle(originalNameContainer);
+            nameContainer.style.display = computed.display;
+            nameContainer.style.alignItems = computed.alignItems;
+            nameContainer.style.justifyContent = computed.justifyContent;
+            nameContainer.style.width = computed.width;
+          }
+
+          const msgContainer = documentClone.querySelector('.card-canvas > div:last-of-type');
+          const originalMsgContainer = canvasRef.current?.querySelector('.card-canvas > div:last-of-type');
+          if (msgContainer instanceof HTMLElement && originalMsgContainer) {
+            const computed = window.getComputedStyle(originalMsgContainer);
+            msgContainer.style.display = computed.display;
+            msgContainer.style.justifyContent = computed.justifyContent;
+            msgContainer.style.textAlign = computed.textAlign;
+            msgContainer.style.maxWidth = computed.maxWidth;
+            msgContainer.style.margin = computed.margin;
           }
         }
       });
