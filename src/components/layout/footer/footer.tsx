@@ -21,15 +21,15 @@ export default function Footer() {
             <h4 className="mb-6 text-xs font-bold tracking-widest text-gray-500 uppercase">
               Legal
             </h4>
-            <ul className="space-y-4 text-sm text-gray-300">
+            <ul className="space-y-4">
               <li>
-                <a href={`/${locale}/legal/terms-of-service`} className="transition-colors hover:text-white">
-                  Terms of Service
+                <a href={`/${locale}/legal/terms-of-service`} className="text-xs font-bold tracking-widest uppercase text-gray-400 transition-colors hover:text-white">
+                  Terms
                 </a>
               </li>
               <li>
-                <a href={`/${locale}/legal/privacy-policy`} className="transition-colors hover:text-white">
-                  Privacy Policy
+                <a href={`/${locale}/legal/privacy-policy`} className="text-xs font-bold tracking-widest uppercase text-gray-400 transition-colors hover:text-white">
+                  Privacy
                 </a>
               </li>
             </ul>
@@ -39,17 +39,14 @@ export default function Footer() {
             <h4 className="mb-6 text-xs font-bold tracking-widest text-gray-500 uppercase">
               Contact
             </h4>
-            <ul className="space-y-4 text-sm text-gray-300">
+            <ul className="space-y-4">
               <li>
                 <a
                   href="mailto:support@birthdaycardgenerator.com"
-                  className="transition-colors hover:text-white"
+                  className="text-xs font-bold tracking-widest uppercase text-gray-400 transition-colors hover:text-white"
                 >
-                  support@birthdaycardgenerator.com
+                  Email Us
                 </a>
-              </li>
-              <li className="flex items-center gap-2 pt-4 text-gray-500">
-                <span>🌏</span> Multiple Languages
               </li>
             </ul>
           </div>
