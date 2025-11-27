@@ -17,8 +17,8 @@ export default function TypographyGenerator() {
 
   // 动态计算字号的算法（优化版）
   useEffect(() => {
-    setFontSize(calculateFontSize(name));
-  }, [name]);
+    setFontSize(calculateFontSize(name, styleKey));
+  }, [name, styleKey]);
 
   // 等待字体加载
   useEffect(() => {
@@ -166,16 +166,23 @@ export default function TypographyGenerator() {
                 ref={canvasRef}
                 className={`card-canvas relative w-[400px] h-[500px] shadow-2xl transition-all duration-500 ease-in-out overflow-hidden ${currentStyle.container}`}
               >
-                {/* 名字区域：应用动态字号 + 修复换行问题 */}
-                <div className="flex-grow flex items-center justify-center w-full z-10">
+                {/* 名字区域：根据风格调整对齐和换行 */}
+                <div className={`flex-grow flex items-center w-full z-10 ${
+                  styleKey === 'elegant' ? 'justify-start' : 'justify-center'
+                }`}>
                   <h1
-                    className={`${currentStyle.nameFont} w-full px-4 max-w-full`}
+                    className={`${currentStyle.nameFont} ${
+                      styleKey === 'playful' ? 'transform -rotate-2' : ''
+                    } ${
+                      styleKey === 'elegant' ? 'text-left' : 'text-center'
+                    } w-full px-4 max-w-full`}
                     style={{
                       fontSize: `${fontSize}px`,
-                      lineHeight: 1.1,
-                      wordBreak: 'keep-all',
-                      overflowWrap: 'break-word',
-                      whiteSpace: 'pre-wrap'
+                      lineHeight: styleKey === 'elegant' ? 1.2 : 1.1,
+                      wordBreak: 'normal',
+                      overflowWrap: 'anywhere', // 更激进的换行策略
+                      whiteSpace: 'pre-wrap',
+                      hyphens: 'auto'
                     }}
                   >
                     {name}
@@ -183,10 +190,14 @@ export default function TypographyGenerator() {
                   </h1>
                 </div>
 
-                {/* 祝福语区域 - 保留换行符 */}
-                <div className={`z-10 mb-8 ${styleKey === 'elegant' ? 'w-full' : 'max-w-[80%] mx-auto'}`}>
+                {/* 祝福语区域 - 根据风格调整样式 */}
+                <div className={`z-10 ${styleKey === 'elegant' ? 'w-full' : 'max-w-[80%] mx-auto text-center'} ${
+                  styleKey === 'playful' ? 'flex justify-center' : ''
+                }`}>
                   <p
-                    className={currentStyle.msgFont}
+                    className={`${currentStyle.msgFont} ${
+                      styleKey === 'playful' ? 'transform rotate-1' : ''
+                    }`}
                     style={{ whiteSpace: 'pre-wrap' }}
                   >
                     {message}
