@@ -12,6 +12,7 @@ export default function TypographyGenerator() {
   const [styleKey, setStyleKey] = useState<CardStyleKey>('minimalist');
   const [fontSize, setFontSize] = useState(100);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -31,29 +32,30 @@ export default function TypographyGenerator() {
 
   const currentStyle = CARD_STYLES[styleKey];
 
-  // 下载功能（使用 snapdom - 快速且准确的所见即所得）
-  const handleDownload = async () => {
+  // 点击下载按钮 - 弹出选择对话框
+  const handleDownload = () => {
+    setShowDownloadModal(true);
+  };
+
+  // 免费下载（有水印）
+  const handleFreeDownload = async () => {
+    setShowDownloadModal(false);
     if (!canvasRef.current) return;
 
     setIsGenerating(true);
     try {
-      // 确保字体已加载
       await document.fonts.ready;
-
-      // 等待一小段时间确保 Google Fonts 完全渲染
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // 使用 snapdom 捕获元素 - 自动保留所有样式！
       const img = await snapdom.toPng(canvasRef.current, {
-        width: 1200,  // 高分辨率输出 (3x 400px)
-        height: 1500, // 高分辨率输出 (3x 500px)
-        quality: 1.0  // 最高质量
+        width: 1200,
+        height: 1500,
+        quality: 1.0
       });
 
-      // 下载图片
       const link = document.createElement('a');
       link.href = img.src;
-      link.download = `birthday-card-${name.toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.download = `birthday-card-${name.toLowerCase().replace(/\s+/g, '-')}-free.png`;
       link.click();
 
       toast.success('Card downloaded successfully!');
@@ -63,6 +65,19 @@ export default function TypographyGenerator() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  // 付费去水印（$2.99）
+  const handleRemoveWatermark = () => {
+    setShowDownloadModal(false);
+    toast.info('Payment integration coming soon!');
+    // TODO: 集成 Stripe 支付
+  };
+
+  // 跳转到 Pro 订阅页面
+  const handleGoPro = () => {
+    setShowDownloadModal(false);
+    window.location.href = '/pricing';
   };
 
   return (
@@ -132,30 +147,6 @@ export default function TypographyGenerator() {
               </span>
               {isGenerating ? 'Generating...' : 'Download Card'}
             </button>
-          </div>
-
-          {/* Remove Watermark CTA */}
-          <div className="pt-8 border-t border-gray-200">
-            <div className="bg-[#F9F9F9] p-6 border border-gray-200">
-              <h3 className="font-serif text-lg font-bold mb-2">Love this design?</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Remove watermark and get high-resolution PDF export
-              </p>
-              <div className="flex flex-col gap-3">
-                <button className="w-full border border-black bg-white py-3 text-sm font-bold tracking-widest uppercase transition-colors hover:bg-black hover:text-white">
-                  Remove Watermark — $2.99
-                </button>
-                <a
-                  href="/pricing"
-                  className="block w-full text-center border border-gray-300 bg-white py-3 text-sm font-bold tracking-widest uppercase transition-colors hover:border-black"
-                >
-                  Go Pro — $19.9/month
-                </a>
-              </div>
-              <p className="mt-3 text-xs text-gray-500 text-center">
-                Pro members get all tools without watermarks
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -237,6 +228,82 @@ export default function TypographyGenerator() {
           </div>
         </div>
       </div>
+
+      {/* Download Options Modal */}
+      {showDownloadModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="relative mx-4 w-full max-w-lg bg-white border-2 border-black">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowDownloadModal(false)}
+              className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800"
+            >
+              ✕
+            </button>
+
+            {/* Modal Content */}
+            <div className="p-8 md:p-12">
+              <h2 className="font-serif mb-3 text-3xl font-bold">
+                Love this design?
+              </h2>
+              <p className="mb-8 text-gray-600">
+                Choose how you want to download your birthday card
+              </p>
+
+              {/* Options */}
+              <div className="space-y-4">
+                {/* Option 1: Free Download */}
+                <button
+                  onClick={handleFreeDownload}
+                  className="w-full border-2 border-gray-300 bg-white p-6 text-left transition-all hover:border-black hover:shadow-lg"
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="font-serif text-xl font-bold">Free Download</h3>
+                    <span className="font-serif text-2xl font-bold">$0</span>
+                  </div>
+                  <ul className="space-y-1 text-sm text-gray-600">
+                    <li>• Standard quality (1200x1500px)</li>
+                    <li>• With watermark</li>
+                    <li>• PNG format</li>
+                  </ul>
+                </button>
+
+                {/* Option 2: Remove Watermark */}
+                <button
+                  onClick={handleRemoveWatermark}
+                  className="w-full border-2 border-black bg-white p-6 text-left transition-all hover:bg-gray-50"
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="font-serif text-xl font-bold">Remove Watermark</h3>
+                    <span className="font-serif text-2xl font-bold">$2.99</span>
+                  </div>
+                  <ul className="space-y-1 text-sm text-gray-600">
+                    <li>• High-resolution (4K)</li>
+                    <li>• No watermark</li>
+                    <li>• PNG + PDF formats</li>
+                  </ul>
+                </button>
+
+                {/* Option 3: Go Pro */}
+                <button
+                  onClick={handleGoPro}
+                  className="w-full border-2 border-black bg-black p-6 text-left text-white transition-all hover:bg-gray-800"
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="font-serif text-xl font-bold">Go Pro</h3>
+                    <span className="font-serif text-2xl font-bold">$19.9<span className="text-sm font-normal">/mo</span></span>
+                  </div>
+                  <ul className="space-y-1 text-sm text-gray-400">
+                    <li>• 30 AI cards per month</li>
+                    <li>• All tools without watermarks</li>
+                    <li>• Priority support</li>
+                  </ul>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
