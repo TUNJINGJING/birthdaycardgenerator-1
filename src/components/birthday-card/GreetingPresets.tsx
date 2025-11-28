@@ -31,11 +31,10 @@ export default function GreetingPresets({
   const filteredGreetings = getGreetingsByCategory(selectedCategory);
 
   return (
-    <div className="w-full">
-      <div className="mb-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-2">{t("title")}</h3>
-        <p className="text-sm text-gray-600">{t("subtitle")}</p>
-      </div>
+    <div className="group space-y-2">
+      <label className="text-xs font-bold tracking-widest text-gray-400 uppercase transition-colors group-hover:text-black">
+        02 / {t("title")}
+      </label>
 
       {/* Category Tabs */}
       <div className="flex gap-2 mb-4 overflow-x-auto">
@@ -44,11 +43,11 @@ export default function GreetingPresets({
             key={category}
             onClick={() => setSelectedCategory(category)}
             className={`
-              px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
+              px-3 py-1.5 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors
               ${
                 selectedCategory === category
-                  ? "bg-blue-500 text-white shadow-md"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-black text-white border border-black"
+                  : "border border-gray-300 text-gray-500 hover:border-black hover:text-black"
               }
             `}
           >
@@ -67,17 +66,17 @@ export default function GreetingPresets({
               key={greeting.id}
               onClick={() => onSelectGreeting(greeting.content)}
               className={`
-                w-full p-4 text-left rounded-lg transition-all duration-200
+                w-full p-3 text-left bg-white transition-colors
                 ${
                   isSelected
-                    ? "bg-blue-50 border-2 border-blue-500 shadow-md"
-                    : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-sm"
+                    ? "border-2 border-black"
+                    : "border border-gray-300 hover:border-black"
                 }
               `}
             >
               <p
                 className={`text-sm leading-relaxed ${
-                  isSelected ? "text-blue-900 font-medium" : "text-gray-700"
+                  isSelected ? "text-black" : "text-gray-600"
                 }`}
               >
                 {greeting.content}

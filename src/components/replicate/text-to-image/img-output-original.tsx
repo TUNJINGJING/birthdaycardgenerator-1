@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
-import { CircularProgress } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -65,121 +63,141 @@ export default function OutputOriginal({
     window.open(urls[platform], "_blank", "width=600,height=400");
   };
 
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = showImage
+      ? showImage
+      : Array.isArray(prediction.output) && prediction.output.length > 1
+      ? prediction.output[1]
+      : prediction.output;
+    link.setAttribute("download", "birthday-card.png");
+    link.setAttribute("target", "_blank");
+    link.click();
+  };
+
   return (
-    <div className="flex flex-col w-full md:w-1/2 px-4 mt-8 md:mt-0">
+    <div className="flex flex-col h-full">
+      {/* Error Message */}
       {error && error !== "" && (
-        <div className="flex justify-center items-center text-red-500 mb-4">
+        <div className="mb-4 border border-red-300 bg-red-50 p-4 text-sm text-red-600">
           {error}
         </div>
       )}
-      <div className="flex-1 flex items-center justify-center">
-        {prediction ? (
-          <>
-            {prediction.output ? (
-              <div className="flex flex-col items-center w-full">
-                <div className="flex justify-center items-center relative group rounded-lg w-full">
-                  <img
-                    src={
-                      showImage
-                        ? showImage
-                        : Array.isArray(prediction.output) &&
-                          prediction.output.length > 1
-                        ? prediction.output[1]
-                        : prediction.output
-                    }
-                    alt="Result"
-                    className="object-contain max-w-full max-h-[420px] rounded-lg"
-                  />
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      className="bg-black text-white"
-                      onClick={() => {
-                        const link = document.createElement("a");
-                        link.href = showImage
+
+      {/* Output Container with Meta Bars */}
+      <div className="relative flex min-h-[500px] flex-col justify-between bg-white border border-gray-300 p-8">
+        {/* Top Meta Bar */}
+        <div className="mb-4 flex w-full justify-between border-b border-gray-200 pb-3 font-mono text-xs tracking-widest text-gray-400 uppercase">
+          <span>Output — Preview</span>
+          <span>1024 × 1024 px</span>
+        </div>
+
+        {/* Main Output Area */}
+        <div className="flex-grow flex items-center justify-center">
+          {prediction ? (
+            <>
+              {prediction.output ? (
+                <div className="flex flex-col items-center w-full gap-6">
+                  {/* Image Display */}
+                  <div className="flex justify-center items-center w-full">
+                    <img
+                      src={
+                        showImage
                           ? showImage
                           : Array.isArray(prediction.output) &&
                             prediction.output.length > 1
                           ? prediction.output[1]
-                          : prediction.output;
-                        link.setAttribute("download", "birthday-card.png");
-                        link.setAttribute("target", "_blank");
-                        link.click();
-                      }}
+                          : prediction.output
+                      }
+                      alt="Result"
+                      className="object-contain max-w-full max-h-[420px]"
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-3 w-full max-w-xs">
+                    <button
+                      onClick={handleDownload}
+                      className="w-full bg-black text-white py-3 text-xs font-bold tracking-widest uppercase transition-colors hover:bg-gray-800"
                     >
                       {t("output.downloadButton")}
-                    </Button>
+                    </button>
+
+                    <button
+                      onClick={handleShare}
+                      disabled={isSharing}
+                      className="w-full border border-gray-300 bg-white text-black py-3 text-xs font-bold tracking-widest uppercase transition-colors hover:border-black disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isSharing ? (
+                        <>
+                          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-black border-t-transparent"></span>
+                          Sharing...
+                        </>
+                      ) : (
+                        <>
+                          <Icon icon="mdi:share-variant" width={16} />
+                          Share Card
+                        </>
+                      )}
+                    </button>
+
+                    {/* Social Share Buttons */}
+                    {shareUrl && (
+                      <div className="flex gap-2 justify-center pt-2">
+                        <button
+                          onClick={() => handleSocialShare("twitter")}
+                          className="p-2 border border-gray-300 hover:border-black transition-colors"
+                          aria-label="Share on Twitter"
+                        >
+                          <Icon icon="mdi:twitter" width={20} />
+                        </button>
+                        <button
+                          onClick={() => handleSocialShare("facebook")}
+                          className="p-2 border border-gray-300 hover:border-black transition-colors"
+                          aria-label="Share on Facebook"
+                        >
+                          <Icon icon="mdi:facebook" width={20} />
+                        </button>
+                        <button
+                          onClick={() => handleSocialShare("whatsapp")}
+                          className="p-2 border border-gray-300 hover:border-black transition-colors"
+                          aria-label="Share on WhatsApp"
+                        >
+                          <Icon icon="mdi:whatsapp" width={20} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                {/* Share Buttons */}
-                <div className="mt-4 flex flex-col items-center gap-3 w-full">
-                  <Button
-                    color="primary"
-                    variant="flat"
-                    onPress={handleShare}
-                    isLoading={isSharing}
-                    startContent={<Icon icon="mdi:share-variant" width={20} />}
-                    className="w-full max-w-xs"
-                  >
-                    Share Card
-                  </Button>
-
-                  {shareUrl && (
-                    <div className="flex gap-2 items-center">
-                      <Button
-                        size="sm"
-                        variant="flat"
-                        isIconOnly
-                        onPress={() => handleSocialShare("twitter")}
-                        className="bg-blue-400 text-white"
-                      >
-                        <Icon icon="mdi:twitter" width={20} />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="flat"
-                        isIconOnly
-                        onPress={() => handleSocialShare("facebook")}
-                        className="bg-blue-600 text-white"
-                      >
-                        <Icon icon="mdi:facebook" width={20} />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="flat"
-                        isIconOnly
-                        onPress={() => handleSocialShare("whatsapp")}
-                        className="bg-green-500 text-white"
-                      >
-                        <Icon icon="mdi:whatsapp" width={20} />
-                      </Button>
-                    </div>
-                  )}
+              ) : (
+                // Loading State
+                <div className="flex flex-col items-center justify-center gap-4 text-center">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-black"></div>
+                  <span className="font-mono text-xs tracking-widest text-gray-600 uppercase">
+                    {prediction.status}
+                  </span>
                 </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full w-full bg-gray-200 border-2 border-dashed animate-pulse rounded-lg">
-                <CircularProgress
-                  color="primary"
-                  aria-label="Loading..."
-                  classNames={{
-                    svg: "text-black",
-                  }}
-                />
-                <span className="text-black font-semibold">
-                  {prediction.status}
-                </span>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="flex items-center justify-center w-full h-full border-2 border-dashed rounded-lg">
-            <img
-              src={defaultImage}
-              className="object-contain max-w-full max-h-[420px] rounded-lg py-6"
-            />
-          </div>
-        )}
+              )}
+            </>
+          ) : (
+            // Default Image (No prediction yet)
+            <div className="flex items-center justify-center w-full">
+              <img
+                src={defaultImage}
+                alt="Default preview"
+                className="object-contain max-w-full max-h-[420px] opacity-30"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Meta Bar */}
+        <div className="mt-4 flex w-full justify-between border-t border-gray-200 pt-3 font-mono text-xs text-gray-400">
+          <span>
+            Status: {prediction ? (prediction.output ? "Complete" : prediction.status) : "Awaiting input"}
+          </span>
+          <span>Format: PNG</span>
+        </div>
       </div>
     </div>
   );
