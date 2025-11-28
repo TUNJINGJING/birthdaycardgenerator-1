@@ -7,7 +7,7 @@ export default function CreditInfo({ credit }: { credit: string }) {
           <span className="font-bold text-indigo-600 px-1">
             {credit}
           </span>
-          <span>remaining credits</span>
+          <span>cards left</span>
         </p>
       ) : (
         <p className="text-sm text-red-600 flex items-center gap-2">

@@ -248,7 +248,7 @@ export default function WorkerOriginal(props: {
                 onClick={handleGenerate}
                 className="group w-full bg-black text-white py-4 text-sm font-bold tracking-widest uppercase transition-colors hover:bg-gray-800"
               >
-                Generate Card (1 Credit)
+                Generate Card (1 Card)
               </button>
             )}
           </div>

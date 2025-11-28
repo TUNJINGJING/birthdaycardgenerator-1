@@ -86,7 +86,7 @@ export default function Home({
                 <p className="font-serif mb-6 text-4xl font-bold">$0</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
                   <li>• Typography Tool (watermarked)</li>
-                  <li>• 3 AI images/month (watermarked)</li>
+                  <li>• 3 AI cards/month (watermarked)</li>
                   <li>• Web quality (1K resolution)</li>
                 </ul>
                 <a
@@ -104,7 +104,7 @@ export default function Home({
                 <p className="font-serif -mt-4 mb-6 text-sm text-gray-400">per month</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-800 pt-6 text-gray-400">
                   <li>• Typography Tool (no watermark)</li>
-                  <li>• 30 AI images/month (no watermark)</li>
+                  <li>• 30 AI cards/month (no watermark)</li>
                   <li>• High-Res PDF export (4K resolution)</li>
                 </ul>
                 <a
