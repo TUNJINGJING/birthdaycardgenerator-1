@@ -11,10 +11,10 @@ export async function generateMetadata({
 
 export default function () {
   return (
-    <div className="flex flex-col items-center px-3 md:px-0 mb-24 pt-16 md:pt-24">
-      <div className="flex flex-col items-center w-full max-w-7xl mx-10">
+    <main className="flex-grow bg-[#F2F2F2]">
+      <section className="py-12 md:py-20">
         <Price />
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
