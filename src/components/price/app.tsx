@@ -86,28 +86,7 @@ export default function Pricing() {
         </p>
       </div>
 
-      {/* Frequency Selector */}
-      <div className="mb-16 flex gap-3 border-b border-gray-300 pb-8">
-        {frequencies.map((frequency) => (
-          <button
-            key={frequency.key}
-            onClick={() => onFrequencyChange(frequency.key)}
-            className={`
-              px-6 py-3 text-sm font-bold tracking-widest uppercase transition-colors
-              ${
-                selectedFrequency.key === frequency.key
-                  ? "bg-black text-white border-2 border-black"
-                  : "border border-gray-300 text-gray-600 hover:border-black hover:text-black"
-              }
-            `}
-          >
-            {frequency.label}
-            {frequency.key === FrequencyEnum.Yearly && (
-              <span className="ml-2 text-xs">Save 30%</span>
-            )}
-          </button>
-        ))}
-      </div>
+      {/* Frequency Selector - Hidden since we have separate tiers now */}
 
       {/* Pricing Cards */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

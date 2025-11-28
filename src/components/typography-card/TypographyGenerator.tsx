@@ -133,6 +133,30 @@ export default function TypographyGenerator() {
               {isGenerating ? 'Generating...' : 'Download Card'}
             </button>
           </div>
+
+          {/* Remove Watermark CTA */}
+          <div className="pt-8 border-t border-gray-200">
+            <div className="bg-[#F9F9F9] p-6 border border-gray-200">
+              <h3 className="font-serif text-lg font-bold mb-2">Love this design?</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Remove watermark and get high-resolution PDF export
+              </p>
+              <div className="flex flex-col gap-3">
+                <button className="w-full border border-black bg-white py-3 text-sm font-bold tracking-widest uppercase transition-colors hover:bg-black hover:text-white">
+                  Remove Watermark — $2.99
+                </button>
+                <a
+                  href="/pricing"
+                  className="block w-full text-center border border-gray-300 bg-white py-3 text-sm font-bold tracking-widest uppercase transition-colors hover:border-black"
+                >
+                  Go Pro — $19.9/month
+                </a>
+              </div>
+              <p className="mt-3 text-xs text-gray-500 text-center">
+                Pro members get all tools without watermarks
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

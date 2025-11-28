@@ -80,37 +80,38 @@ export default function Home({
               <p className="text-gray-500">Simple tools. Simple pricing.</p>
             </div>
             <div className="grid grid-cols-1 gap-8 md:col-span-8 md:grid-cols-2">
-              {/* Basic Plan */}
+              {/* Free Plan */}
               <div className="border border-gray-300 bg-white/50 p-8 transition-colors hover:border-black">
-                <h3 className="font-serif mb-2 text-xl font-bold">Basic</h3>
+                <h3 className="font-serif mb-2 text-xl font-bold">Free</h3>
                 <p className="font-serif mb-6 text-4xl font-bold">$0</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
-                  <li>• Watermarked downloads</li>
-                  <li>• Standard styles</li>
-                  <li>• Web quality</li>
+                  <li>• Typography Tool (watermarked)</li>
+                  <li>• 3 AI images/month (watermarked)</li>
+                  <li>• Web quality (1K resolution)</li>
                 </ul>
                 <a
                   href={`/${locale}/ai-card`}
                   className="inline-block border-b border-black pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:text-gray-600"
                 >
-                  Start Free
+                  Try Free
                 </a>
               </div>
 
               {/* Pro Plan */}
               <div className="border border-black bg-black p-8 text-white">
-                <h3 className="font-serif mb-2 text-xl font-bold">Pro Pass</h3>
-                <p className="font-serif mb-6 text-4xl font-bold italic">$4.99</p>
+                <h3 className="font-serif mb-2 text-xl font-bold">Pro</h3>
+                <p className="font-serif mb-6 text-4xl font-bold italic">$19.9</p>
+                <p className="font-serif -mt-4 mb-6 text-sm text-gray-400">per month</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-800 pt-6 text-gray-400">
-                  <li>• No watermarks</li>
-                  <li>• High-Res Print Ready (PDF)</li>
-                  <li>• All premium fonts</li>
+                  <li>• Typography Tool (no watermark)</li>
+                  <li>• 30 AI images/month (no watermark)</li>
+                  <li>• High-Res PDF export (4K resolution)</li>
                 </ul>
                 <a
                   href={`/${locale}/pricing`}
                   className="inline-block border-b border-white pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:border-gray-300 hover:text-gray-300"
                 >
-                  Get Started
+                  Get Pro
                 </a>
               </div>
             </div>
