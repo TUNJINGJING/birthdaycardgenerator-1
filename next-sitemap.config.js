@@ -1,3 +1,3 @@
 module.exports = {
-  siteUrl: 'https://nanoimageeditor.com'
+  siteUrl: 'https://birthdaycardgenerator.com'
 }

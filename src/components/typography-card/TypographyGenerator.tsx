@@ -55,7 +55,7 @@ export default function TypographyGenerator() {
     watermark.style.fontWeight = '500';
     watermark.style.pointerEvents = 'none';
     watermark.style.zIndex = '100';
-    watermark.textContent = 'nanoimageeditor.com';
+    watermark.textContent = 'birthdaycardgenerator.com';
 
     try {
       await document.fonts.ready;
