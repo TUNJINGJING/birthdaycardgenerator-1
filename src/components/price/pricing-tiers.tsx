@@ -17,9 +17,42 @@ export const frequencies: Array<Frequency> = [
 ];
 
 export const tiers: Array<Tier> = [
+  // Free
+  {
+    key: TiersEnum.PayOnce, // 使用 PayOnce 作为 key，因为 TiersEnum 里没有 Free
+    id: {
+      [FrequencyEnum.Monthly]: 0,
+      [FrequencyEnum.Yearly]: 0,
+      [FrequencyEnum.OneTime]: 0,
+    },
+    amount: {
+      [FrequencyEnum.Monthly]: 0,
+      [FrequencyEnum.Yearly]: 0,
+      [FrequencyEnum.OneTime]: 0,
+    },
+    interval: {
+      [FrequencyEnum.Monthly]: "month",
+      [FrequencyEnum.Yearly]: "month",
+      [FrequencyEnum.OneTime]: "month",
+    },
+    title: "Free",
+    price: "$0",
+    href: "#",
+    featured: false,
+    mostPopular: false,
+    description: "Try it out",
+    features: {
+      yearly: ["Typography Tool (watermarked)", "3 AI cards/month (watermarked)", "Web quality (1K resolution)"],
+      monthly: ["Typography Tool (watermarked)", "3 AI cards/month (watermarked)", "Web quality (1K resolution)"],
+      onetime: ["Typography Tool (watermarked)", "3 AI cards/month (watermarked)", "Web quality (1K resolution)"],
+    },
+    buttonText: "Get Started",
+    buttonColor: "default",
+    buttonVariant: "flat",
+  },
   // Pay Once
   {
-    key: TiersEnum.PayOnce,
+    key: TiersEnum.ProMonthly, // 临时使用
     id: {
       [FrequencyEnum.Monthly]: 1,
       [FrequencyEnum.Yearly]: 1,
@@ -50,72 +83,49 @@ export const tiers: Array<Tier> = [
     buttonColor: "default",
     buttonVariant: "flat",
   },
-  // Pro Monthly
+  // Pro (with Monthly/Yearly toggle)
   {
-    key: TiersEnum.ProMonthly,
+    key: TiersEnum.ProYearly, // 临时使用
     id: {
       [FrequencyEnum.Monthly]: 2,
-      [FrequencyEnum.Yearly]: 2,
+      [FrequencyEnum.Yearly]: 5,
       [FrequencyEnum.OneTime]: 2,
     },
     amount: {
       [FrequencyEnum.Monthly]: 1990,
-      [FrequencyEnum.Yearly]: 1990,
+      [FrequencyEnum.Yearly]: 18900,
       [FrequencyEnum.OneTime]: 1990,
     },
     interval: {
       [FrequencyEnum.Monthly]: "month",
-      [FrequencyEnum.Yearly]: "month",
+      [FrequencyEnum.Yearly]: "year",
       [FrequencyEnum.OneTime]: "month",
     },
-    title: "Pro Monthly",
-    price: "$19.9",
-    priceSuffix: "per month",
+    title: "Pro",
+    price: {
+      monthly: "$19.9",
+      yearly: "$189",
+      onetime: "$19.9",
+    },
+    priceSuffix: {
+      monthly: "per month",
+      yearly: "per year",
+      onetime: "per month",
+    },
     href: "#",
-    featured: false,
+    featured: true,
     mostPopular: true,
     description: "Best for regular card creators",
     features: {
-      yearly: ["30 AI cards/month (4K)", "No watermarks", "High-Res PDF export", "Typography Tool (no watermark)"],
       monthly: ["30 AI cards/month (4K)", "No watermarks", "High-Res PDF export", "Typography Tool (no watermark)"],
+      yearly: ["360 AI cards/year (4K)", "No watermarks", "High-Res PDF export", "Priority support"],
       onetime: ["30 AI cards/month (4K)", "No watermarks", "High-Res PDF export", "Typography Tool (no watermark)"],
     },
     buttonText: "Subscribe",
     buttonColor: "default",
     buttonVariant: "flat",
-  },
-  // Pro Yearly
-  {
-    key: TiersEnum.ProYearly,
-    id: {
-      [FrequencyEnum.Monthly]: 5,
-      [FrequencyEnum.Yearly]: 5,
-      [FrequencyEnum.OneTime]: 5,
-    },
-    amount: {
-      [FrequencyEnum.Monthly]: 18900,
-      [FrequencyEnum.Yearly]: 18900,
-      [FrequencyEnum.OneTime]: 18900,
-    },
-    interval: {
-      [FrequencyEnum.Monthly]: "year",
-      [FrequencyEnum.Yearly]: "year",
-      [FrequencyEnum.OneTime]: "year",
-    },
-    title: "Pro Yearly",
-    price: "$189",
-    priceSuffix: "per year",
-    href: "#",
-    featured: true,
-    mostPopular: false,
-    description: "Best value for power users",
-    features: {
-      yearly: ["360 AI cards/year (4K)", "No watermarks", "High-Res PDF export", "Priority support"],
-      monthly: ["360 AI cards/year (4K)", "No watermarks", "High-Res PDF export", "Priority support"],
-      onetime: ["360 AI cards/year (4K)", "No watermarks", "High-Res PDF export", "Priority support"],
-    },
-    buttonText: "Subscribe",
-    buttonColor: "default",
-    buttonVariant: "flat",
+    // 标记这是可切换的 Pro tier
+    isToggleable: true,
+    savingsPercent: 21, // ($19.9 * 12 - $189) / ($19.9 * 12) * 100 ≈ 21%
   },
 ];

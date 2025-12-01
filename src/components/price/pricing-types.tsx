@@ -48,7 +48,13 @@ export type Tier = {
         [FrequencyEnum.OneTime]: string;
       }
     | string;
-  priceSuffix?: string;
+  priceSuffix?:
+    | {
+        monthly: string;
+        yearly: string;
+        onetime: string;
+      }
+    | string;
   href: string;
   description?: string;
   mostPopular?: boolean;
@@ -59,4 +65,6 @@ export type Tier = {
   buttonText: string;
   buttonColor?: ButtonProps["color"];
   buttonVariant: ButtonProps["variant"];
+  isToggleable?: boolean;
+  savingsPercent?: number;
 };
