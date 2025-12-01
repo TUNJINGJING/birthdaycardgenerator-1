@@ -43,9 +43,28 @@ export default function TypographyGenerator() {
     if (!canvasRef.current) return;
 
     setIsGenerating(true);
+
+    // 创建临时水印元素
+    const watermark = document.createElement('div');
+    watermark.style.position = 'absolute';
+    watermark.style.bottom = '12px';
+    watermark.style.right = '12px';
+    watermark.style.fontSize = '14px';
+    watermark.style.color = 'rgba(0, 0, 0, 0.3)';
+    watermark.style.fontFamily = 'monospace';
+    watermark.style.fontWeight = '500';
+    watermark.style.pointerEvents = 'none';
+    watermark.style.zIndex = '100';
+    watermark.textContent = 'nanoimageeditor.com';
+
     try {
       await document.fonts.ready;
-      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // 添加水印到卡片
+      canvasRef.current.appendChild(watermark);
+
+      // 等待水印渲染
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       const img = await snapdom.toPng(canvasRef.current, {
         width: 1200,
@@ -63,6 +82,10 @@ export default function TypographyGenerator() {
       console.error('Download error:', error);
       toast.error('Failed to download card');
     } finally {
+      // 移除水印
+      if (watermark.parentNode) {
+        watermark.parentNode.removeChild(watermark);
+      }
       setIsGenerating(false);
     }
   };
