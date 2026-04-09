@@ -1,4 +1,4 @@
-import TypographyGenerator from "@/components/typography-card/TypographyGenerator";
+import WorkerOriginalWrapper from "@/components/replicate/text-to-image/worker-original-wraper";
 import TopHero from "@/components/landingpage/top";
 import { getMetadata } from "@/components/seo/seo";
 
@@ -15,58 +15,22 @@ export default function Home({
 }: {
   params: { locale: string };
 }) {
+  const effectId = "2";
+  const multiLanguageOfGenerator = "TextToImage";
+  const outputDefaultImage = "/resources/text-to-image.jpg";
+
   return (
     <main className="flex-grow">
-      {/* Hero Section with Typography Generator */}
+      {/* Hero Section with AI Card Generator */}
       <section className="py-12 md:py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           <TopHero />
           <div className="mt-16">
-            <TypographyGenerator />
-          </div>
-        </div>
-      </section>
-
-      {/* Style Gallery Section */}
-      <section className="border-y border-gray-300 bg-white py-20">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          <div className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="font-serif mb-4 text-4xl leading-tight font-bold md:text-5xl">
-              Not just one style. <br />
-              <i className="text-gray-400">Yours.</i>
-            </h2>
-            <p className="mt-4 text-gray-500">
-              While our interface is clean, your cards don't have to be. Choose from our curated library of aesthetics.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* The Minimalist */}
-            <div className="group cursor-pointer">
-              <div className="relative mb-6 flex aspect-[4/5] items-center justify-center overflow-hidden border border-gray-200 bg-[#F3F4F6] transition-colors hover:border-black">
-                <span className="font-serif text-4xl text-gray-800">Classic</span>
-              </div>
-              <h3 className="font-serif text-lg font-bold">The Minimalist</h3>
-              <p className="mt-2 text-sm text-gray-500">Timeless typography focused on the message.</p>
-            </div>
-
-            {/* The Pop */}
-            <div className="group cursor-pointer">
-              <div className="relative mb-6 flex aspect-[4/5] items-center justify-center overflow-hidden border border-gray-200 bg-[#FFEFD5] transition-colors hover:border-black">
-                <span className="rotate-[-5deg] font-sans text-4xl font-black text-[#FF4500] uppercase">Bold!</span>
-              </div>
-              <h3 className="font-serif text-lg font-bold">The Pop</h3>
-              <p className="mt-2 text-sm text-gray-500">Vibrant colors and bold fonts for high energy.</p>
-            </div>
-
-            {/* The Midnight */}
-            <div className="group cursor-pointer">
-              <div className="relative mb-6 flex aspect-[4/5] items-center justify-center overflow-hidden border border-gray-200 bg-[#1a1a1a] transition-colors hover:border-gray-500">
-                <span className="font-serif text-4xl font-light text-white italic">Elegant</span>
-              </div>
-              <h3 className="font-serif text-lg font-bold">The Midnight</h3>
-              <p className="mt-2 text-sm text-gray-500">Dark mode aesthetic for a premium feel.</p>
-            </div>
+            <WorkerOriginalWrapper
+              effectId={effectId}
+              multiLanguage={multiLanguageOfGenerator}
+              outputDefaultImage={outputDefaultImage}
+            />
           </div>
         </div>
       </section>
@@ -85,12 +49,11 @@ export default function Home({
                 <h3 className="font-serif mb-2 text-xl font-bold">Free</h3>
                 <p className="font-serif mb-6 text-4xl font-bold">$0</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
-                  <li>• Typography Tool (watermarked)</li>
                   <li>• 3 AI cards/month (watermarked)</li>
                   <li>• Web quality (1K resolution)</li>
                 </ul>
                 <a
-                  href={`/${locale}/ai-card`}
+                  href={`/${locale}`}
                   className="inline-block border-b border-black pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:text-gray-600"
                 >
                   Try Free
@@ -103,7 +66,6 @@ export default function Home({
                 <p className="font-serif mb-6 text-4xl font-bold italic">$19.9</p>
                 <p className="font-serif -mt-4 mb-6 text-sm text-gray-400">per month</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-800 pt-6 text-gray-400">
-                  <li>• Typography Tool (no watermark)</li>
                   <li>• 30 AI cards/month (no watermark)</li>
                   <li>• High-Res PDF export (4K resolution)</li>
                 </ul>

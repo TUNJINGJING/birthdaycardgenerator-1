@@ -24,10 +24,6 @@ export default function BasicNavbar() {
     }
     if (pathname.endsWith("/")) {
       setActiveTag("home");
-    } else if (pathname.includes("ai-card")) {
-      setActiveTag("ai-card");
-    } else if (pathname.includes("text-to-image")) {
-      setActiveTag("text-to-image");
     } else if (pathname.includes("pricing")) {
       setActiveTag("pricing");
     } else if (pathname.includes("dashboard")) {
@@ -54,12 +50,6 @@ export default function BasicNavbar() {
               className={activeTag === "home" ? "text-black" : "transition-colors hover:text-black"}
             >
               {t("home")}
-            </a>
-            <a
-              href={`/${locale}/ai-card`}
-              className={activeTag === "ai-card" ? "text-black" : "transition-colors hover:text-black"}
-            >
-              AI Card
             </a>
             <a
               href={`/${locale}/pricing`}
@@ -112,13 +102,6 @@ export default function BasicNavbar() {
               onClick={() => setIsMenuOpen(false)}
             >
               {t("home")}
-            </a>
-            <a
-              href={`/${locale}/ai-card`}
-              className={activeTag === "ai-card" ? "text-black" : "text-gray-500"}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              AI Card
             </a>
             <a
               href={`/${locale}/pricing`}
