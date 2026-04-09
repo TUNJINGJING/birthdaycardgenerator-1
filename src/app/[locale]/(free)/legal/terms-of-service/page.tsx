@@ -17,7 +17,7 @@ By accessing or using Birthday Card Generator's services, you confirm that:
 
 ## 2. Description of Services
 
-Birthday Card Generator provides tools for generating AI-powered videos and images. Users can upload media to create custom outputs. While we strive to deliver high-quality results, the outputs may vary based on input quality.
+Birthday Card Generator provides tools for generating AI-powered birthday card images. Users can choose a style, enter a greeting message, and generate unique card designs. While we strive to deliver high-quality results, the outputs may vary based on input.
 
 
 ## 3. User Responsibilities
@@ -47,7 +47,7 @@ By uploading content, you grant Birthday Card Generator a limited, non-exclusive
 
 Our use of your personal data is governed by our [Privacy Policy](#). By using our platform, you agree to our data collection and usage practices as described in the Privacy Policy.
 
-**Uploaded Media:** We do not save or store your uploaded photos or videos after processing unless you explicitly provide consent.
+**Generated Content:** Your text prompts and generated card images are processed in real time. We do not retain your input data beyond what is necessary to deliver the service unless you explicitly provide consent.
 
 
 ## 6. Payment and Subscription
@@ -93,10 +93,10 @@ We reserve the right to terminate or suspend your account and access to the plat
 
 ## 11. Governing Law and Dispute Resolution
 
-These Terms shall be governed by and construed in accordance with the laws of **[Insert Country or Jurisdiction]**, without regard to its conflict of laws principles.
+These Terms shall be governed by and construed in accordance with the laws of the **State of California, United States**, without regard to its conflict of laws principles.
 
 ### 11.1 Dispute Resolution
-- Any disputes arising out of or relating to these Terms shall first be resolved through informal negotiation. If unresolved, disputes will be submitted to binding arbitration in **[Insert Location]**.
+- Any disputes arising out of or relating to these Terms shall first be resolved through informal negotiation. If unresolved, disputes will be submitted to binding arbitration in **San Francisco, California**.
 - Users waive their right to a jury trial or participation in a class action.
 
 
@@ -115,6 +115,14 @@ By using Birthday Card Generator, you acknowledge that you have read, understood
 
 
 `;
+
+export const metadata = {
+  title: "Terms of Service — Birthday Card Generator",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function TermsOfServicePage() {
   return (

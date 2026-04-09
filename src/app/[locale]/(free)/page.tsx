@@ -180,6 +180,25 @@ export default function Home({
         </div>
       </section>
 
+      {/* FAQPage JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              { "@type": "Question", "name": "How do I create my first card?", "acceptedAnswer": { "@type": "Answer", "text": "Choose a style, add your message (or pick from our preset greetings), and click Generate. Your unique card is ready in about 30 seconds." }},
+              { "@type": "Question", "name": "Is it really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Sign up and get 3 free cards per month. For more creations, check out our Pro plan." }},
+              { "@type": "Question", "name": "Do I need design skills?", "acceptedAnswer": { "@type": "Answer", "text": "Not at all. If you can type a message, you can create a card. The AI handles everything else." }},
+              { "@type": "Question", "name": "Can I use the cards commercially?", "acceptedAnswer": { "@type": "Answer", "text": "Free cards are for personal use. Pro subscribers get commercial usage rights. See our Terms of Service for details." }},
+              { "@type": "Question", "name": "What image quality do I get?", "acceptedAnswer": { "@type": "Answer", "text": "All cards are generated at 1024×1024px—perfect for sharing on social media or printing at home." }},
+              { "@type": "Question", "name": "Can I save my created cards?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Sign in to access your card history and re-download any card you've created from your dashboard." }},
+            ]
+          })
+        }}
+      />
+
       {/* CTA */}
       <section className="bg-[#F2F2F2] py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">

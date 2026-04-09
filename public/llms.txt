@@ -1,8 +1,19 @@
-# ai-image-video-generator-template
+# Birthday Card Generator
 
-> AI Image Video Generator Template empowers anyone to create expressive videos from simple text or images. Whether it's a romantic moment or a playful memory, let our AI bring your vision to life—no editing skills needed.
+> Create personalized AI birthday cards in minutes. Choose a style, add your message, and download instantly. No design skills needed.
 
-AI Image Video Generator Template is a leading platform for AI video and image creation. Offering the latest and most advanced tools to craft stunning, high-quality AI-generated visuals. Discover how AI can enhance your creativity with user-friendly features and cutting-edge technology.
+Birthday Card Generator (https://www.birthdaycardgenerator.com) is a web app for creating unique, AI-generated birthday cards. Pick from four styles (Warm, Funny, Formal, Cute), choose or write a greeting, and get a one-of-a-kind card in under 30 seconds.
 
-## Video Creation
-- [AI Image Video Generator](https://xxxx.com)
+## Features
+- AI-powered card generation (text-to-image)
+- 4 card styles: Warm, Funny, Formal, Cute
+- 50+ preset birthday greetings by relationship category
+- 1024×1024px PNG download
+- Card history dashboard
+- Free tier: 3 cards/month
+- Pro tier: 30 cards/month, 4K resolution, no watermark
+
+## Pages
+- [Home — Create a Card](https://www.birthdaycardgenerator.com)
+- [Pricing](https://www.birthdaycardgenerator.com/en/pricing)
+- [Dashboard — My Cards](https://www.birthdaycardgenerator.com/en/dashboard)

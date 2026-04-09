@@ -18,6 +18,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <head>
         <link rel="icon" href="/logo.jpeg" />
+        <meta name="theme-color" content="#111111" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

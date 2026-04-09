@@ -1,18 +1,20 @@
+# *
 User-agent: *
 Allow: /
 Disallow: /dashboard
 Disallow: /legal/
+Disallow: /api/
 
+# GPTBot
 User-agent: GPTBot
-User-agent: Claude-Web
-User-agent: Anthropic-AI
-User-agent: PerplexityBot
-User-agent: GoogleOther
-User-agent: DuckAssistBot
-Allow: /llms.txt
-Allow: /llms-full.txt
 Allow: /
+Allow: /llms.txt
 Disallow: /dashboard
 Disallow: /legal/
+Disallow: /api/
 
-Sitemap: https://xxxx.com/sitemap.xml
+# Host
+Host: https://www.birthdaycardgenerator.com
+
+# Sitemaps
+Sitemap: https://www.birthdaycardgenerator.com/sitemap.xml

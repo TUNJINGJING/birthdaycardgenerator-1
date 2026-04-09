@@ -17,7 +17,7 @@ We may collect the following types of information:
 - Payment information for subscription or purchases (handled securely via third-party payment processors).
 
 ### 1.2 Uploaded Data
-- Photos and videos you upload to generate AI content. **Note:** We do not save or store uploaded media after processing unless explicitly agreed upon by you.
+- Text prompts and style selections you provide to generate AI birthday cards. **Note:** We do not save or store your input data beyond what is needed for card generation unless explicitly agreed upon by you.
 
 ### 1.3 Automatically Collected Information
 - **Log Data**: IP address, browser type, operating system, and timestamps.
@@ -116,6 +116,7 @@ export default function PrivacyPolicyPage() {
 }
 
 export const metadata = {
+  title: "Privacy Policy — Birthday Card Generator",
   robots: {
     index: false,
     follow: true,
