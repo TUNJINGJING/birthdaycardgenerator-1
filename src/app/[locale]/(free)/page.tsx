@@ -2,6 +2,7 @@ import WorkerOriginalWrapper from "@/components/replicate/text-to-image/worker-o
 import TopHero from "@/components/landingpage/top";
 import Testimonials from "@/components/landingpage/Testimonials/testimonials";
 import Cta from "@/components/landingpage/cta";
+import Pricing from "@/components/price/app";
 import { getMetadata } from "@/components/seo/seo";
 
 export async function generateMetadata({
@@ -140,44 +141,7 @@ export default function Home({
 
       {/* Pricing */}
       <section id="pricing" className="bg-white py-20">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-          <div className="mb-16 border-b border-black pb-8">
-            <h2 className="font-serif text-4xl font-bold md:text-5xl">Pricing.</h2>
-            <p className="mt-4 text-gray-500">Simple tools. Simple pricing.</p>
-          </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-3xl">
-            <div className="border border-gray-300 p-8 transition-colors hover:border-black">
-              <h3 className="font-serif mb-2 text-xl font-bold">Free</h3>
-              <p className="font-serif mb-6 text-4xl font-bold">$0</p>
-              <ul className="mb-8 space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
-                <li>• 3 AI cards/month</li>
-                <li>• 1K resolution PNG</li>
-              </ul>
-              <a
-                href={`/${locale}`}
-                className="inline-block border-b border-black pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:text-gray-600"
-              >
-                Try Free
-              </a>
-            </div>
-            <div className="border border-black bg-black p-8 text-white">
-              <h3 className="font-serif mb-2 text-xl font-bold">Pro</h3>
-              <p className="font-serif mb-2 text-4xl font-bold italic">$19.9</p>
-              <p className="font-serif mb-6 text-sm text-gray-400">per month</p>
-              <ul className="mb-8 space-y-3 border-t border-gray-800 pt-6 text-gray-400">
-                <li>• 30 AI cards/month</li>
-                <li>• 4K resolution PNG</li>
-                <li>• No watermark</li>
-              </ul>
-              <a
-                href={`/${locale}/pricing`}
-                className="inline-block border-b border-white pb-1 text-sm font-bold tracking-widest uppercase transition-colors hover:border-gray-300 hover:text-gray-300"
-              >
-                Get Pro
-              </a>
-            </div>
-          </div>
-        </div>
+        <Pricing />
       </section>
 
       {/* FAQPage JSON-LD */}
