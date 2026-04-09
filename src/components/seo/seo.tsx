@@ -29,11 +29,13 @@ export async function getMetadata(
       title: t("title"),
       description: t("description"),
       url: canonical,
+      siteName: "Birthday Card Generator",
+      type: "website",
       images: [
         {
-          url: "",
-          width: 800,
-          height: 600,
+          url: `${baseUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
           alt: t("title"),
         },
       ],
@@ -42,7 +44,7 @@ export async function getMetadata(
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      image: "",
+      images: [`${baseUrl}/og-image.jpg`],
     },
   };
 }

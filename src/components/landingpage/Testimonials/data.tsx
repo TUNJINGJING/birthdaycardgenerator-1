@@ -1,136 +1,114 @@
 type Testimonial = {
-    avatar: string;
-    name: string;
-    role?: string;
-    content: string;
-  };
-  
-  export const testimonials: Testimonial[] = [
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-6.png",
-      name: "John Doe",
-      content:
-        "Birthday Card Generator revolutionized the way I create content. What used to take hours of editing now takes minutes—and the results feel truly lifelike.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-51.png",
-      name: "Alice Johnson",
-      content:
-        "I’m amazed at how naturally Birthday Card Generator transforms my words into emotional, cinematic videos. It feels like storytelling with zero effort.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-7.png",
-      name: "Michael Brown",
-      content:
-        "Whether you're using photos or text, Birthday Card Generator delivers unique video creations every time. The customization options are fantastic.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-1.png",
-      name: "Linda Davis",
-      content:
-        "The creative freedom Birthday Card Generator offers is unmatched. I’ve used it for personal and professional projects—it never disappoints.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-2.png",
-      name: "David Wilson",
-      content:
-        "Turning my thoughts into professional-looking videos used to be complicated. Birthday Card Generator makes it incredibly smooth and fast.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-8.png",
-      name: "Susan Wilson",
-      content:
-        "The interface is clean and intuitive, and the results are emotionally powerful. Birthday Card Generator is now my go-to for visual storytelling.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-3.png",
-      name: "Maria Jones",
-      content:
-        "As a freelancer, Birthday Card Generator has saved me hours of work while letting me offer stunning, customized videos to my clients.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-52.png",
-      name: "Karen Wilson",
-      content:
-        "Birthday Card Generator makes it effortless to create beautiful animations from a single photo or phrase. My content creation flow is now faster and better.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260259",
-      name: "Mark Davis",
-      content:
-        "This tool redefines what’s possible with AI-generated video. It's creative, intuitive, and surprisingly emotional.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260260",
-      name: "Jane Smith",
-      content:
-        "I uploaded a short text and watched Birthday Card Generator turn it into a moving, romantic video. The emotional depth surprised me.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260261",
-      name: "Richard Miller",
-      content:
-        "From text to fully animated scenes—every video I created with Birthday Card Generator felt smooth, natural, and thoughtfully rendered.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260267",
-      name: "Emily Turner",
-      content:
-        "Within minutes, my uploaded text became a vivid animation. The transitions were seamless—like magic.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260268",
-      name: "Brian Cooper",
-      content:
-        "Each prompt I’ve submitted gets transformed into a story-rich scene. The video quality is amazing for an AI platform.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260269",
-      name: "Sophia Edwards",
-      content:
-        "Just drop in your text, pick a style, and let it go. In a few minutes, you’ll have something surprisingly heartfelt.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-8.png",
-      name: "James Robinson",
-      content:
-        "I was impressed by how naturally Birthday Card Generator processed my scripts. The videos felt handcrafted, not AI-generated.",
-    },
-    {
-      avatar: "https://pub-243881b4bf3d4dd480dd08cd28d60652.r2.dev/avatar/avatar-53.png",
-      name: "Oliver Martinez",
-      content:
-        "I wasn’t expecting much—but the video output was incredibly polished and deeply emotional. Total game-changer.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260272",
-      name: "Daniel Harris",
-      content:
-        "Birthday Card Generator retains the soul of the original text while enhancing it visually. The text-to-video conversion feels cinematic.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260273",
-      name: "Victoria White",
-      content:
-        "It’s fast, effective, and visually stunning. I never thought turning text into video could feel so seamless.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260274",
-      name: "Henry Lewis",
-      content:
-        "I tested Birthday Card Generator and the result is amazing: smooth, natural videos with a real touch of emotion.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260275",
-      name: "Isabella Clark",
-      content:
-        "I uploaded my text to Birthday Card Generator and was surprised by the video quality: smooth, emotional, and super realistic.",
-    },
-    {
-      avatar: "https://i.pravatar.cc/150?u=a042581f4e290260276",
-      name: "Ethan Walker",
-      content:
-        "Uploading is simple, and the quality Birthday Card Generator delivers is consistently impressive. It’s like having a video studio on demand.",
-    }
-  ];
-  ;  
+  avatar: string;
+  name: string;
+  role?: string;
+  content: string;
+};
+
+export const testimonials: Testimonial[] = [
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260259",
+    name: "Sarah M.",
+    content: "I sent an AI-generated card to my mom and she thought I hired a designer. Took me literally 2 minutes.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260260",
+    name: "James T.",
+    content: "Used this for my whole team's birthdays this year. Everyone loved how personal each card felt.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260261",
+    name: "Emily R.",
+    content: "The 'Warm' style is perfect for family. My grandma was genuinely moved by the card I created for her.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260262",
+    name: "Michael C.",
+    content: "I'm terrible at writing birthday messages. The preset greetings saved me and the results looked stunning.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260263",
+    name: "Lisa K.",
+    content: "Fast, beautiful, and free to try. I've already created cards for 6 friends this month.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260264",
+    name: "David W.",
+    content: "The Funny style is hilarious. My best friend couldn't stop laughing at the card I sent him.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260265",
+    name: "Anna P.",
+    content: "I was skeptical about AI art but this is genuinely impressive. The cards look unique every time.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260266",
+    name: "Tom H.",
+    content: "Signed up, generated 3 cards in my first session. The interface couldn't be simpler.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260267",
+    name: "Rachel B.",
+    content: "Way better than sending a generic store-bought eCard. Everyone thinks I put in so much effort.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260268",
+    name: "Kevin L.",
+    content: "The Formal style is great for colleagues. Professional enough to send to my boss, personal enough to feel special.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260269",
+    name: "Megan F.",
+    content: "I love that I can write my own message and the AI still makes it look incredible.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260270",
+    name: "Chris A.",
+    content: "Downloaded my card and shared it on WhatsApp. Three people asked me where I made it.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260271",
+    name: "Jessica N.",
+    content: "The Cute style is adorable. Perfect for kids' birthdays—my niece absolutely loved it.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260272",
+    name: "Daniel S.",
+    content: "I've been using this every month. The cards never look the same twice, even with similar prompts.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260273",
+    name: "Olivia G.",
+    content: "30 seconds and I had a card that looked better than anything I could have made in Canva.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260274",
+    name: "Ryan M.",
+    content: "Pro plan is absolutely worth it. 30 cards a month covers everyone in my family and friend group.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260275",
+    name: "Stephanie C.",
+    content: "Finally an AI tool that does exactly what it says. Simple, fast, and the output is beautiful.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260276",
+    name: "Nathan J.",
+    content: "I used the greeting presets as a starting point and then customized. Worked perfectly.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260277",
+    name: "Laura V.",
+    content: "My partner thought I spent hours on his birthday card. It took 90 seconds. I'm keeping this a secret.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260278",
+    name: "Mark O.",
+    content: "Clean design, works on mobile, generates fast. Exactly what I needed for last-minute birthdays.",
+  },
+  {
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e290260279",
+    name: "Isabella H.",
+    content: "I printed one of my cards and framed it as a gift. The quality at 1K resolution held up perfectly.",
+  },
+];
