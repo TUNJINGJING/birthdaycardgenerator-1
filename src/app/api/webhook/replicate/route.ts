@@ -3,7 +3,7 @@ import {
   updateEffectResult,
   updateEffectResultError,
 } from "@/backend/service/effect_result";
-import { reducePeriodRemainCountByUserId } from "@/backend/service/credit_usage";
+import { increasePeriodRemainCountByUserId } from "@/backend/service/credit_usage";
 
 export const maxDuration = 60;
 
@@ -57,10 +57,7 @@ export async function POST(req: Request, res: Response) {
           output
         );
       }
-      reducePeriodRemainCountByUserId(
-        effectResult.user_id,
-        effectResult.credit
-      );
+      // Credit was already pre-deducted at request time — nothing to do here
     } else if (webhookData.status === "failed") {
       await updateEffectResultError(
         effectResult.original_id,
@@ -69,7 +66,12 @@ export async function POST(req: Request, res: Response) {
         new Date(),
         ""
       );
-      console.error("Error message:", webhookData.error);
+      // Refund credit — generation failed, user shouldn't be charged
+      await increasePeriodRemainCountByUserId(
+        effectResult.user_id,
+        effectResult.credit
+      );
+      console.error("Generation failed, credit refunded. Error:", webhookData.error);
     }
 
     return Response.json({ message: "Webhook received" }, { status: 200 });

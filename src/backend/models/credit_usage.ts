@@ -50,4 +50,10 @@ export async function reducePeriodRemainCount(user_id: string, credit: number) {
   return res.rows[0];
 }
 
+export async function increasePeriodRemainCount(user_id: string, credit: number) {
+  const db = await getDb();
+  const res = await db.query(`UPDATE credit_usage SET period_remain_count = period_remain_count + $1, used_count = GREATEST(used_count - $1, 0) WHERE user_id = $2`, [credit, user_id]);
+  return res.rows[0];
+}
+
 

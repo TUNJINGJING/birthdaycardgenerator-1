@@ -54,7 +54,7 @@ export default function Footer() {
 
         <div className="flex flex-col items-end justify-between font-mono text-xs text-gray-500 md:flex-row">
           <div>
-            &copy; 2024 BirthdayCardGenerator.com
+            &copy; 2026 BirthdayCardGenerator.com
             <br />
             All rights reserved.
           </div>

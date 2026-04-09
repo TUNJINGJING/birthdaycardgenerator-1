@@ -3,12 +3,13 @@ import Replicate from "replicate";
 import { createEffectResult } from "@/backend/service/effect_result";
 import { genEffectResultId } from "@/backend/utils/genId";
 import { generateCheck } from "@/backend/service/generate-_check";
+import { reducePeriodRemainCountByUserId } from "@/backend/service/credit_usage";
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
-const WEBHOOK_HOST = process.env.REPLICATE_URL
+const WEBHOOK_HOST = process.env.REPLICATE_URL;
 
 export async function POST(request: Request) {
   if (!process.env.REPLICATE_API_TOKEN) {
@@ -19,16 +20,20 @@ export async function POST(request: Request) {
 
   const requestBody = await request.json();
   const { model, prompt, width, height, output_format, aspect_ratio, user_id, user_email, effect_link_name, version, credit } = requestBody;
-  // check user
+
+  // Check user and credit
   const result = await generateCheck(user_id, user_email, credit);
   if (result !== 1) {
-    return NextResponse.json({ detail: "Failed to create effect result" }, { status: 500 });
+    return result as Response;
   }
+
+  // Pre-deduct credit before calling Replicate — prevents abuse from concurrent requests
+  await reducePeriodRemainCountByUserId(user_id, parseInt(credit));
 
   const options = {
     version: version,
     model: model,
-    input: { prompt, width, height, output_format, aspect_ratio, },
+    input: { prompt, width, height, output_format, aspect_ratio },
     webhook: "",
     webhook_events_filter: [] as string[],
   };
@@ -40,6 +45,8 @@ export async function POST(request: Request) {
 
   const prediction = await replicate.predictions.create(options as any);
   if (prediction?.error) {
+    // Replicate rejected — refund credit
+    await reducePeriodRemainCountByUserId(user_id, -parseInt(credit));
     return NextResponse.json({ detail: prediction.error }, { status: 500 });
   }
 
@@ -58,8 +65,8 @@ export async function POST(request: Request) {
     running_time: -1,
     credit: credit,
     request_params: JSON.stringify(requestBody),
-    created_at: new Date()
-  }).catch(error => {
+    created_at: new Date(),
+  }).catch((error) => {
     console.error("Failed to create effect result:", error);
   });
 

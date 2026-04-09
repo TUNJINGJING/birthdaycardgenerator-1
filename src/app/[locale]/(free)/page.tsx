@@ -1,5 +1,10 @@
 import WorkerOriginalWrapper from "@/components/replicate/text-to-image/worker-original-wraper";
 import TopHero from "@/components/landingpage/top";
+import How from "@/components/landingpage/how";
+import FeatureHero from "@/components/landingpage/feature";
+import Faq from "@/components/landingpage/faq";
+import Testimonials from "@/components/landingpage/Testimonials/testimonials";
+import Cta from "@/components/landingpage/cta";
 import { getMetadata } from "@/components/seo/seo";
 
 export async function generateMetadata({
@@ -21,7 +26,7 @@ export default function Home({
 
   return (
     <main className="flex-grow">
-      {/* Hero Section with AI Card Generator */}
+      {/* Hero Section + AI Card Generator */}
       <section className="py-12 md:py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-12">
           <TopHero />
@@ -32,6 +37,32 @@ export default function Home({
               outputDefaultImage={outputDefaultImage}
             />
           </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="bg-[#F2F2F2] py-20">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <How multiLanguage="HomePage" />
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <FeatureHero multiLanguage="HomePage" />
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="bg-[#F2F2F2] py-20 overflow-hidden">
+        <Testimonials />
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <Faq multiLanguage="HomePage" grid={true} />
         </div>
       </section>
 
@@ -49,7 +80,7 @@ export default function Home({
                 <h3 className="font-serif mb-2 text-xl font-bold">Free</h3>
                 <p className="font-serif mb-6 text-4xl font-bold">$0</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
-                  <li>• 3 AI cards/month (watermarked)</li>
+                  <li>• 3 AI cards/month</li>
                   <li>• Web quality (1K resolution)</li>
                 </ul>
                 <a
@@ -66,7 +97,7 @@ export default function Home({
                 <p className="font-serif mb-6 text-4xl font-bold italic">$19.9</p>
                 <p className="font-serif -mt-4 mb-6 text-sm text-gray-400">per month</p>
                 <ul className="mb-8 space-y-3 border-t border-gray-800 pt-6 text-gray-400">
-                  <li>• 30 AI cards/month (no watermark)</li>
+                  <li>• 30 AI cards/month</li>
                   <li>• High-Res PDF export (4K resolution)</li>
                 </ul>
                 <a
@@ -78,6 +109,13 @@ export default function Home({
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <Cta multiLanguage="HomePage" />
         </div>
       </section>
     </main>

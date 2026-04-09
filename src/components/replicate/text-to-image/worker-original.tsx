@@ -231,7 +231,20 @@ export default function WorkerOriginal(props: {
 
           {/* Generate Button */}
           <div className="pt-4">
-            {generating ? (
+            {!user ? (
+              // Not logged in — show sign-in prompt
+              <div className="space-y-3">
+                <a
+                  href="/api/auth/signin"
+                  className="block w-full bg-black text-white py-4 text-sm font-bold tracking-widest uppercase text-center transition-colors hover:bg-gray-800"
+                >
+                  Sign In to Create Free Cards
+                </a>
+                <p className="text-center text-xs text-gray-400">
+                  3 free cards included · No credit card required
+                </p>
+              </div>
+            ) : generating ? (
               <button
                 disabled
                 className="w-full bg-gray-800 text-white py-4 text-sm font-bold tracking-widest uppercase flex items-center justify-center gap-2 opacity-75 cursor-not-allowed"

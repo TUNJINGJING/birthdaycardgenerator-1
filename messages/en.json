@@ -1,7 +1,6 @@
 {
   "Nav": {
     "home": "Home",
-    "text-to-image": "Create Card",
     "logOut": "Log Out",
     "login": "Sign In",
     "dashboard": "My Cards",
@@ -143,18 +142,6 @@
     }
   },
   "TextToImage": {
-    "seo": {
-      "title": "Create Birthday Card | AI Birthday Card Generator",
-      "description": "Create personalized birthday cards with AI. Choose from 4 styles, add your message, and download in seconds. Free to start!"
-    },
-    "top": {
-      "subTitle": "AI Birthday Card Generator",
-      "description": "Create unique, personalized birthday cards powered by AI. Perfect for friends, family, and colleagues. No design skills needed!"
-    },
-    "input": {
-      "title": "Birthday Card Generator",
-      "description": "Choose a style, add your personal message, and let AI create a beautiful birthday card for you."
-    },
     "styles": {
       "title": "Choose Your Style",
       "warm": {
@@ -187,16 +174,15 @@
     "input": {
       "placeholder": "e.g., Happy Birthday! Wishing you a day filled with love, laughter, and all your favorite things!",
       "characterCount": "{count}/200 characters",
-      "characterHint": "💡 Tip: 50-100 characters works best"
+      "characterHint": "Tip: 50-100 characters works best"
     },
     "errors": {
-      "noCredit": "Oops! You've used your 3 free cards. 🎉 Subscribe to create unlimited birthday wishes!",
+      "noCredit": "You've used all your free cards. Subscribe to create more birthday wishes!",
       "emptyMessage": "Please enter a birthday message to get started"
     }
   },
-
   "dashboard": {
-    "title": "Dashboard",
+    "title": "My Cards",
     "subscription": {
       "remainingCredits": "Credits Remaining",
       "planName": "Current Plan",
@@ -212,8 +198,8 @@
       "created": "Created",
       "view": "View"
     },
-    "loading": "",
-    "noResults": "No results found",
+    "loading": "Loading...",
+    "noResults": "No cards yet. Go create your first one!",
     "modal": {
       "noContent": "No content available",
       "effect": "Effect",

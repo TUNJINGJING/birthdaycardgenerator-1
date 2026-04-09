@@ -138,7 +138,7 @@ function TierCard({ tier, loading, onCheckout }: any) {
           </button>
         ) : tier.title === "Free" ? (
           <a
-            href="/ai-card"
+            href="/"
             className="block w-full border border-gray-300 bg-white text-black py-4 text-sm font-bold tracking-widest uppercase text-center transition-colors hover:border-black"
           >
             {tier.buttonText}
