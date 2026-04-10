@@ -140,6 +140,10 @@ export async function POST(req: Request) {
     const session = await stripe.checkout.sessions.create(options);
     return Response.json({ session });
   } catch (e) {
-    console.log("checkout failed: ", e);
+    console.error("checkout failed: ", e);
+    return Response.json(
+      { error: e instanceof Error ? e.message : "Checkout failed" },
+      { status: 500 }
+    );
   }
 }
