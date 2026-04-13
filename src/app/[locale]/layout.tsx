@@ -17,7 +17,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <head>
-        <link rel="icon" href="/logo.jpeg" />
+        <link rel="icon" href="/logo.png" />
         <meta name="theme-color" content="#111111" />
         <script
           type="application/ld+json"

@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/logo.jpeg" />
+        <link rel="icon" href="/logo.png" />
       </head>
       <body>
         {/* Google tag (gtag.js) */}

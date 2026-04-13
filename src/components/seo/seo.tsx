@@ -20,7 +20,7 @@ export async function getMetadata(
     description: t("description"),
     icons: {
       rel: "icon",
-      icon: "/logo.jpeg",
+      icon: "/logo.png",
     },
     alternates: {
       canonical: canonical,
