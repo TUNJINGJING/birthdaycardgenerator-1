@@ -5,7 +5,6 @@ import { Icon } from "@iconify/react";
 
 import { FrequencyEnum } from "@/components/price/pricing-types";
 import { tiers } from "@/components/price/pricing-tiers";
-import { useAppContext } from "@/contexts/app";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -174,7 +173,6 @@ function TierCard({ tier, loading, onCheckout }: any) {
 }
 
 export default function Pricing() {
-  const { user } = useAppContext();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -186,20 +184,12 @@ export default function Pricing() {
     try {
       setLoading(true);
 
-      const params = {
-        plan_id: plan_id,
-        amount: amount,
-        interval: interval,
-        user_uuid: user?.uuid,
-        user_email: user?.email,
-      };
-
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify({ plan_id }),
       });
 
       const data = await response.json();

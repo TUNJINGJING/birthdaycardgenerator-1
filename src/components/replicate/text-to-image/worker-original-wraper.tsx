@@ -11,9 +11,7 @@ export default async function WorkerOriginalWraper(params: {
   if (!effect) return null;
   return (
     <WorkerOriginal
-      model={effect.model}
-      effect_link_name={effect.link_name}
-      version={effect.version}
+      effectId={effect.id}
       credit={effect.credit}
       defaultImage={params.outputDefaultImage}
       lang={params.multiLanguage}

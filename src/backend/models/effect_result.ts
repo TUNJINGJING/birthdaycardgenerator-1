@@ -70,6 +70,43 @@ export async function update(
   }
 }
 
+export async function failAndRefundCreditOnce(
+  originalId: string,
+  updatedAt: Date
+): Promise<boolean> {
+  const db = await getDb();
+  const client = await db.connect();
+  try {
+    await client.query("BEGIN");
+    const failedResult = await client.query(
+      `UPDATE effect_result SET status = 'failed', running_time = -1, updated_at = $2 WHERE original_id = $1 AND status IS DISTINCT FROM 'failed' AND status IS DISTINCT FROM 'succeeded' RETURNING user_id, credit`,
+      [originalId, updatedAt]
+    );
+
+    if (failedResult.rowCount !== 1) {
+      await client.query("COMMIT");
+      return false;
+    }
+
+    const { user_id: userId, credit } = failedResult.rows[0];
+    const refundResult = await client.query(
+      `UPDATE credit_usage SET period_remain_count = period_remain_count + $1, used_count = GREATEST(used_count - $1, 0) WHERE user_id = $2 RETURNING id`,
+      [credit, userId]
+    );
+    if (refundResult.rowCount !== 1) {
+      throw new Error("Unable to refund failed generation credit");
+    }
+
+    await client.query("COMMIT");
+    return true;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 export async function getByOriginalId(originalId: string) {
   const db = await getDb();
   const res = await db.query(

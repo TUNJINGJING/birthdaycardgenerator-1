@@ -6,6 +6,7 @@ import {
   getByOriginalId,
   getByResultIdAndUserId,
   pageListByUserId,
+  failAndRefundCreditOnce,
 } from "../models/effect_result";
 import { toEffectResultInfos } from "../type/domain/effect_result_info";
 import { update } from "../models/effect_result";
@@ -48,14 +49,11 @@ export async function updateEffectResult(
   console.log(`Effect result updated in database with URL: ${r2Url}`);
 }
 
-export async function updateEffectResultError(
+export async function failEffectResultAndRefundCreditOnce(
   originalId: string,
-  status: string,
-  runningTime: number,
-  updatedAt: Date,
-  url: string
+  updatedAt: Date
 ) {
-  await update(originalId, status, runningTime, updatedAt, url);
+  return await failAndRefundCreditOnce(originalId, updatedAt);
 }
 
 export async function updateEffectResultText(

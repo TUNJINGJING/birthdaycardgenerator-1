@@ -24,9 +24,7 @@ const stylePrompts = {
 };
 
 export default function WorkerOriginal(props: {
-  model: string;
-  effect_link_name: string;
-  version: string | null;
+  effectId: number;
   credit: number;
   promptTips?: string;
   defaultImage?: string;
@@ -37,11 +35,8 @@ export default function WorkerOriginal(props: {
   const [generating, setGenerating] = useState<boolean>(false);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const width = 1024;
-  const height = 1024;
   const [userSubscriptionInfo, setUserSubscriptionInfo] =
     useState<UserSubscriptionInfo | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const { user } = useAppContext();
   const router = useRouter();
   const t = useTranslations(props.lang || "index");
@@ -58,14 +53,12 @@ export default function WorkerOriginal(props: {
       "/api/user/get_user_subscription_info",
       {
         method: "POST",
-        body: JSON.stringify({ user_id: user.uuid }),
       }
     ).then((res) => {
       if (!res.ok) throw new Error("Failed to fetch user subscription info");
       return res.json();
     });
     setUserSubscriptionInfo(userSubscriptionInfo);
-    setIsSubscribed(userSubscriptionInfo.subscription_status === "active");
   };
 
   const handleSelectGreeting = (greeting: string) => {
@@ -101,17 +94,8 @@ export default function WorkerOriginal(props: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: props.model,
-          version: props.version,
+          effect_id: props.effectId,
           prompt: enhancedPrompt,
-          width,
-          height,
-          output_format: "png",
-          aspect_ratio: "1:1",
-          user_id: user?.uuid,
-          user_email: user?.email,
-          effect_link_name: props.effect_link_name,
-          credit: props.credit,
         }),
       });
 
@@ -148,32 +132,6 @@ export default function WorkerOriginal(props: {
       }
       setPrediction(newPrediction);
     }
-    // update effect result
-    const runningTime =
-      (newPrediction.created_at
-        ? new Date().getTime() - new Date(newPrediction.created_at).getTime()
-        : -1) / 1000;
-
-    // 获取生成的图片URL
-    const imageUrl = Array.isArray(newPrediction.output) && newPrediction.output.length > 1
-      ? newPrediction.output[1]
-      : newPrediction.output || "";
-
-    fetch("/api/effect_result/update", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        original_id: newPrediction.id,
-        status: newPrediction.status,
-        running_time: runningTime,
-        updated_at: new Date(),
-        original_image_url: imageUrl,
-        object_key: newPrediction.id.substring(0, 8),
-      }),
-    });
-    await sleep(4000);
     setGenerating(false);
     fetchUserSubscriptionInfo();
   };

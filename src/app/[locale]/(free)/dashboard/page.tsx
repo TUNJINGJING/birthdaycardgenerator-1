@@ -40,7 +40,6 @@ export default function Dashboard() {
       "/api/user/get_user_subscription_info",
       {
         method: "POST",
-        body: JSON.stringify({ user_id: user.uuid }),
       }
     ).then((res) => {
       if (!res.ok) throw new Error("Failed to fetch user subscription info");
@@ -55,7 +54,7 @@ export default function Dashboard() {
     setIsLoading(true);
     try {
       const results = await fetch(
-        `/api/effect_result/list_by_user_id?user_id=${user.uuid}&page=${pageNum}&page_size=${pageSize}`
+        `/api/effect_result/list_by_user_id?page=${pageNum}&page_size=${pageSize}`
       ).then((res) => {
         if (!res.ok) throw new Error("Failed to fetch results");
         return res.json();
@@ -72,9 +71,7 @@ export default function Dashboard() {
     if (!user?.uuid) return;
 
     try {
-      const response = await fetch(
-        `/api/effect_result/count_all?user_id=${user.uuid}`
-      );
+      const response = await fetch("/api/effect_result/count_all");
       if (!response.ok) throw new Error("Failed to fetch count");
 
       const data = await response.json();

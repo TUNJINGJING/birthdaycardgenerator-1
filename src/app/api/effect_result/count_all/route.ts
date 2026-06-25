@@ -1,14 +1,17 @@
-import { countEffectResultsByUserId } from "@/backend/service/effect_result";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import { authOptions } from "@/backend/auth/options";
+import { countEffectResultsByUserId } from "@/backend/service/effect_result";
+import { User } from "@/backend/type/type";
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const userId = searchParams.get("user_id");
-  if (!userId) {
-    return Response.json({ detail: "User ID is required" }, { status: 400 });
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  const user = session?.user as User | undefined;
+  if (!user?.uuid) {
+    return Response.json({ detail: "Unauthorized" }, { status: 401 });
   }
-  const count = await countEffectResultsByUserId(userId);
+
+  const count = await countEffectResultsByUserId(user.uuid);
   if (count > 100) {
     return NextResponse.json({ count: 100 });
   }

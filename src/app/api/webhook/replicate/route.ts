@@ -1,25 +1,44 @@
+import { validateWebhook } from "replicate";
 import {
+  failEffectResultAndRefundCreditOnce,
   getEffectResultByOriginalId,
   updateEffectResult,
-  updateEffectResultError,
 } from "@/backend/service/effect_result";
-import { increasePeriodRemainCountByUserId } from "@/backend/service/credit_usage";
 
 export const maxDuration = 60;
 
-export async function POST(req: Request, res: Response) {
-  if (req.method !== "POST") {
-    return Response.json({ error: "Method not allowed" }, { status: 405 });
+const MAX_WEBHOOK_AGE_SECONDS = 5 * 60;
+
+export async function POST(req: Request) {
+  const webhookSecret = process.env.REPLICATE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("REPLICATE_WEBHOOK_SECRET is not configured");
+    return Response.json({ error: "Webhook is not configured" }, { status: 503 });
+  }
+
+  const timestamp = Number(req.headers.get("webhook-timestamp"));
+  const now = Math.floor(Date.now() / 1000);
+  if (
+    !Number.isSafeInteger(timestamp) ||
+    Math.abs(now - timestamp) > MAX_WEBHOOK_AGE_SECONDS
+  ) {
+    return Response.json({ error: "Invalid webhook timestamp" }, { status: 401 });
+  }
+
+  try {
+    const webhookIsValid = await validateWebhook(req.clone(), webhookSecret);
+    if (!webhookIsValid) {
+      return Response.json({ error: "Invalid webhook signature" }, { status: 401 });
+    }
+  } catch {
+    return Response.json({ error: "Invalid webhook signature" }, { status: 401 });
   }
 
   try {
     const webhookData = await req.json();
     const effectResult = await getEffectResultByOriginalId(webhookData.id);
     if (!effectResult) {
-      return Response.json(
-        { error: "Effect result not found" },
-        { status: 500 }
-      );
+      return Response.json({ error: "Effect result not found" }, { status: 500 });
     }
 
     const runningTime =
@@ -29,26 +48,12 @@ export async function POST(req: Request, res: Response) {
         : -1) / 1000;
 
     if (webhookData.status === "succeeded") {
-      let output = processWebhookOutput(
+      const output = processWebhookOutput(
         webhookData.output,
         effectResult.effect_name
       );
 
-      if (effectResult.status === "succeeded") {
-        if (
-          effectResult.url === "" ||
-          effectResult.url === null ||
-          effectResult.url === undefined
-        ) {
-          await updateEffectResult(
-            effectResult.original_id,
-            webhookData.status,
-            runningTime,
-            new Date(),
-            output
-          );
-        }
-      } else {
+      if (effectResult.status !== "succeeded" || !effectResult.url) {
         await updateEffectResult(
           effectResult.original_id,
           webhookData.status,
@@ -57,21 +62,14 @@ export async function POST(req: Request, res: Response) {
           output
         );
       }
-      // Credit was already pre-deducted at request time — nothing to do here
     } else if (webhookData.status === "failed") {
-      await updateEffectResultError(
+      const refunded = await failEffectResultAndRefundCreditOnce(
         effectResult.original_id,
-        webhookData.status,
-        -1,
-        new Date(),
-        ""
+        new Date()
       );
-      // Refund credit — generation failed, user shouldn't be charged
-      await increasePeriodRemainCountByUserId(
-        effectResult.user_id,
-        effectResult.credit
-      );
-      console.error("Generation failed, credit refunded. Error:", webhookData.error);
+      if (refunded) {
+        console.error("Generation failed; credit refunded:", webhookData.error);
+      }
     }
 
     return Response.json({ message: "Webhook received" }, { status: 200 });
@@ -82,17 +80,14 @@ export async function POST(req: Request, res: Response) {
 }
 
 function processWebhookOutput(output: any, effect_name: string) {
-  // Handle case where output is an object with images array
   if (output && typeof output === "object" && "images" in output) {
     return output.images[0];
   }
 
-  // Handle case where output is an object with image property
   if (output && typeof output === "object" && "image" in output) {
     return output.image;
   }
 
-  // Handle case where output is an array
   if (Array.isArray(output)) {
     if (effect_name === "face-to-sticker") {
       return output[1];
@@ -110,30 +105,22 @@ function processWebhookOutput(output: any, effect_name: string) {
     return output[0];
   }
 
-  // Return as-is if neither case matches
   return output;
 }
 
-// Utility function to format array of words into a formatted article
 function formatArticleFromWords(words: string[]): string {
   if (!Array.isArray(words) || words.length === 0) {
     return "";
   }
 
-  // Join words and trim extra spaces
   const text = words.join("").replace(/\s+/g, " ").trim();
-
-  // Capitalize first letter of sentences
   const formattedText = text.replace(/(^\w|\.\s+\w)/g, (letter) =>
     letter.toUpperCase()
   );
 
-  // Add paragraph breaks after periods
-  const paragraphs = formattedText
+  return formattedText
     .split(". ")
     .map((p) => p.trim())
     .filter((p) => p.length > 0)
     .join(".\n\n");
-
-  return paragraphs;
 }

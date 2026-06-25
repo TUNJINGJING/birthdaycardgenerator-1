@@ -79,43 +79,49 @@ export async function POST(req: Request) {
         ) {
           return Response.json({ received: true });
         }
+
+        const paymentHistory_1: PaymentHistory = await getPaymentHistoryById(
+          checkoutSessionCompleted.metadata.paymentHistoryId
+        );
+        if (paymentHistory_1?.status === "success") {
+          console.log("checkout.session.completed already processed");
+          return Response.json({ received: true });
+        }
+
+        const creditToAdd = parseInt(checkoutSessionCompleted.metadata.credit);
+        if (!Number.isSafeInteger(creditToAdd) || creditToAdd <= 0) {
+          throw new Error("Invalid checkout credit metadata");
+        }
+
         let credit_usage_from_db_1: CreditUsage = await getCreditUsageByUserId(
           checkoutSessionCompleted.metadata.userId
         );
-        if (
-          credit_usage_from_db_1.period_end &&
-          credit_usage_from_db_1.period_end > newPeriodEnd
-        ) {
-          newPeriodEnd = new Date(credit_usage_from_db_1.period_end);
-        }
         if (!credit_usage_from_db_1) {
           const credit_usage_1: CreditUsage = {
             user_id: checkoutSessionCompleted.metadata.userId,
             user_subscriptions_id: -1,
             is_subscription_active: false,
             used_count: 0,
-            period_remain_count: parseInt(
-              checkoutSessionCompleted.metadata.credit
-            ),
+            period_remain_count: creditToAdd,
             period_start: currentDate_1,
             period_end: newPeriodEnd,
             created_at: new Date(),
           };
           await createCreditUsage(credit_usage_1);
         } else {
+          if (
+            credit_usage_from_db_1.period_end &&
+            credit_usage_from_db_1.period_end > newPeriodEnd
+          ) {
+            newPeriodEnd = new Date(credit_usage_from_db_1.period_end);
+          }
           credit_usage_from_db_1.period_remain_count =
-            credit_usage_from_db_1.period_remain_count +
-            parseInt(checkoutSessionCompleted.metadata.credit);
-          // credit_usage_from_db_1.period_start = currentDate_1;
+            credit_usage_from_db_1.period_remain_count + creditToAdd;
           credit_usage_from_db_1.period_end = newPeriodEnd;
           credit_usage_from_db_1.updated_at = new Date();
           await updateCreditUsage(credit_usage_from_db_1);
         }
 
-        // step3: update payment history
-        let paymentHistory_1: PaymentHistory = await getPaymentHistoryById(
-          checkoutSessionCompleted.metadata.paymentHistoryId
-        );
         paymentHistory_1.stripe_subscription_id = checkoutSessionCompleted.id;
         paymentHistory_1.stripe_customer_id =
           checkoutSessionCompleted.customer?.toString() || "";

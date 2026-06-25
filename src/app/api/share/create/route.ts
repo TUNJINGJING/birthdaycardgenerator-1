@@ -1,26 +1,39 @@
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { genUniSeq } from "@/backend/utils";
+import { authOptions } from "@/backend/auth/options";
+import { getEffectResultByOriginalId } from "@/backend/service/effect_result";
+import { User } from "@/backend/type/type";
+import { createShareToken } from "@/backend/utils/share-token";
 
 export async function POST(request: NextRequest) {
   try {
-    const { prediction_id } = await request.json();
+    const session = await getServerSession(authOptions);
+    const user = session?.user as User | undefined;
+    if (!user?.uuid) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    if (!prediction_id) {
+    const { prediction_id } = await request.json();
+    if (!prediction_id || typeof prediction_id !== "string") {
       return NextResponse.json(
         { error: "prediction_id is required" },
         { status: 400 }
       );
     }
 
-    // 生成唯一分享 ID
-    const shareId = genUniSeq();
+    const effectResult = await getEffectResultByOriginalId(prediction_id);
+    if (!effectResult || effectResult.user_id !== user.uuid) {
+      return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    }
 
-    // 这里可以选择将分享信息存储到数据库
-    // 暂时使用 prediction_id 直接作为查询参数
+    const shareId = createShareToken({
+      prediction_id,
+      created_at: Date.now(),
+    });
 
     return NextResponse.json({
-      shareId: shareId,
-      shareUrl: `/share/${shareId}?prediction_id=${prediction_id}`,
+      shareId,
+      shareUrl: `/share/${shareId}`,
     });
   } catch (error) {
     console.error("Share creation error:", error);

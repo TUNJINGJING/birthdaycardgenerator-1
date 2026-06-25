@@ -1,74 +1,119 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import Replicate from "replicate";
+import { authOptions } from "@/backend/auth/options";
 import { createEffectResult } from "@/backend/service/effect_result";
+import { getEffectById } from "@/backend/service/effect";
 import { genEffectResultId } from "@/backend/utils/genId";
-import { generateCheck } from "@/backend/service/generate-_check";
-import { reducePeriodRemainCountByUserId } from "@/backend/service/credit_usage";
+import {
+  increasePeriodRemainCountByUserId,
+  reducePeriodRemainCountByUserId,
+} from "@/backend/service/credit_usage";
+import { User } from "@/backend/type/type";
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
 const WEBHOOK_HOST = process.env.REPLICATE_URL;
+const GENERATION_INPUT = {
+  width: 1024,
+  height: 1024,
+  output_format: "png",
+  aspect_ratio: "1:1",
+};
 
 export async function POST(request: Request) {
   if (!process.env.REPLICATE_API_TOKEN) {
-    throw new Error(
-      "The REPLICATE_API_TOKEN environment variable is not set. See README.md for instructions on how to set it."
+    return NextResponse.json(
+      { detail: "Image generation is not configured." },
+      { status: 503 }
     );
   }
 
-  const requestBody = await request.json();
-  const { model, prompt, width, height, output_format, aspect_ratio, user_id, user_email, effect_link_name, version, credit } = requestBody;
-
-  // Check user and credit
-  const result = await generateCheck(user_id, user_email, credit);
-  if (result !== 1) {
-    return result as Response;
+  const session = await getServerSession(authOptions);
+  const user = session?.user as User | undefined;
+  if (!user?.uuid) {
+    return NextResponse.json({ detail: "Please login first." }, { status: 401 });
   }
 
-  // Pre-deduct credit before calling Replicate — prevents abuse from concurrent requests
-  await reducePeriodRemainCountByUserId(user_id, parseInt(credit));
+  let requestBody: { effect_id?: unknown; prompt?: unknown };
+  try {
+    requestBody = await request.json();
+  } catch {
+    return NextResponse.json({ detail: "Invalid request body." }, { status: 400 });
+  }
+
+  const effectId = Number(requestBody.effect_id);
+  const prompt =
+    typeof requestBody.prompt === "string" ? requestBody.prompt.trim() : "";
+  if (!Number.isSafeInteger(effectId) || effectId <= 0 || !prompt) {
+    return NextResponse.json({ detail: "Invalid generation request." }, { status: 400 });
+  }
+
+  const effect = await getEffectById(effectId);
+  if (!effect || effect.is_open !== 1 || !effect.model) {
+    return NextResponse.json({ detail: "Generation effect is unavailable." }, { status: 404 });
+  }
+
+  const credit = Number(effect.credit);
+  if (!Number.isSafeInteger(credit) || credit <= 0) {
+    console.error("Invalid effect credit configuration:", effect.id);
+    return NextResponse.json({ detail: "Generation effect is unavailable." }, { status: 500 });
+  }
+
+  const deducted = await reducePeriodRemainCountByUserId(user.uuid, credit);
+  if (!deducted) {
+    return NextResponse.json(
+      { detail: "Your credit is not enough, please purchase credits or subscribe." },
+      { status: 402 }
+    );
+  }
 
   const options = {
-    version: version,
-    model: model,
-    input: { prompt, width, height, output_format, aspect_ratio },
-    webhook: "",
-    webhook_events_filter: [] as string[],
+    version: effect.version,
+    model: effect.model,
+    input: { prompt, ...GENERATION_INPUT },
+    webhook: WEBHOOK_HOST ? `${WEBHOOK_HOST}/api/webhook/replicate` : undefined,
+    webhook_events_filter: WEBHOOK_HOST ? (["completed"] as const) : undefined,
   };
 
-  if (WEBHOOK_HOST) {
-    options.webhook = `${WEBHOOK_HOST}/api/webhook/replicate`;
-    options.webhook_events_filter = ["start", "completed"];
+  let prediction;
+  try {
+    prediction = await replicate.predictions.create(options as any);
+  } catch (error) {
+    await increasePeriodRemainCountByUserId(user.uuid, credit);
+    console.error("Failed to create prediction:", error);
+    return NextResponse.json({ detail: "Image generation failed to start." }, { status: 502 });
   }
 
-  const prediction = await replicate.predictions.create(options as any);
   if (prediction?.error) {
-    // Replicate rejected — refund credit
-    await reducePeriodRemainCountByUserId(user_id, -parseInt(credit));
+    await increasePeriodRemainCountByUserId(user.uuid, credit);
     return NextResponse.json({ detail: prediction.error }, { status: 500 });
   }
 
-  const resultId = genEffectResultId();
-  createEffectResult({
-    result_id: resultId,
-    user_id: user_id,
-    original_id: prediction.id,
-    effect_id: 0,
-    effect_name: effect_link_name,
-    prompt: prompt,
-    url: "",
-    status: "pending",
-    original_url: "",
-    storage_type: "S3",
-    running_time: -1,
-    credit: credit,
-    request_params: JSON.stringify(requestBody),
-    created_at: new Date(),
-  }).catch((error) => {
-    console.error("Failed to create effect result:", error);
-  });
+  try {
+    await createEffectResult({
+      result_id: genEffectResultId(),
+      user_id: user.uuid,
+      original_id: prediction.id,
+      effect_id: effect.id,
+      effect_name: effect.link_name,
+      prompt,
+      url: "",
+      status: "pending",
+      original_url: "",
+      storage_type: "S3",
+      running_time: -1,
+      credit,
+      request_params: JSON.stringify({ effect_id: effect.id, prompt, ...GENERATION_INPUT }),
+      created_at: new Date(),
+    });
+  } catch (error) {
+    await increasePeriodRemainCountByUserId(user.uuid, credit);
+    console.error("Failed to record prediction:", error);
+    return NextResponse.json({ detail: "Image generation could not be recorded." }, { status: 500 });
+  }
 
   return NextResponse.json(prediction, { status: 201 });
 }

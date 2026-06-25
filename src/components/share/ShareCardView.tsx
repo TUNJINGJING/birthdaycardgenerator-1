@@ -7,53 +7,57 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 interface ShareCardViewProps {
-  predictionId: string;
   shareId: string;
 }
 
-export default function ShareCardView({
-  predictionId,
-  shareId,
-}: ShareCardViewProps) {
-  const [prediction, setPrediction] = useState<any>(null);
+interface SharedPrediction {
+  id: string;
+  status: string;
+  output: string | null;
+}
+
+export default function ShareCardView({ shareId }: ShareCardViewProps) {
+  const [prediction, setPrediction] = useState<SharedPrediction | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchPrediction();
-  }, [predictionId]);
+    fetchSharedCard();
+  }, [shareId]);
 
-  const fetchPrediction = async () => {
+  const fetchSharedCard = async () => {
     try {
-      const response = await fetch(`/api/predictions/${predictionId}`);
+      const response = await fetch(`/api/share/${shareId}`);
 
       if (!response.ok) {
         throw new Error("Failed to load card");
       }
 
       const data = await response.json();
+      const sharedPrediction = data.prediction as SharedPrediction | undefined;
 
-      if (data.status === "succeeded" && data.output) {
-        setPrediction(data);
-      } else if (data.status === "failed") {
+      if (sharedPrediction?.status === "succeeded" && sharedPrediction.output) {
+        setPrediction(sharedPrediction);
+      } else if (sharedPrediction?.status === "failed") {
         setError("This card failed to generate");
       } else {
         setError("This card is not ready yet");
       }
     } catch (err) {
-      console.error("Error fetching prediction:", err);
+      console.error("Error fetching shared card:", err);
       setError("Failed to load this birthday card");
     } finally {
       setLoading(false);
     }
   };
 
+  const getShareUrl = () => `${window.location.origin}/share/${shareId}`;
+
   const handleCopyLink = async () => {
-    const shareUrl = `${window.location.origin}/share/${shareId}?prediction_id=${predictionId}`;
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(getShareUrl());
       toast.success("Link copied to clipboard!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to copy link");
     }
   };
@@ -61,20 +65,15 @@ export default function ShareCardView({
   const handleDownload = () => {
     if (!prediction?.output) return;
 
-    const imageUrl = Array.isArray(prediction.output) && prediction.output.length > 1
-      ? prediction.output[1]
-      : prediction.output;
-
     const link = document.createElement("a");
-    link.href = imageUrl;
+    link.href = prediction.output;
     link.setAttribute("download", "birthday-card.png");
     link.setAttribute("target", "_blank");
     link.click();
   };
 
   const handleSocialShare = (platform: string) => {
-    const shareUrl = `${window.location.origin}/share/${shareId}?prediction_id=${predictionId}`;
-    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedUrl = encodeURIComponent(getShareUrl());
     const text = encodeURIComponent("Check out this birthday card!");
 
     const urls: Record<string, string> = {
@@ -118,13 +117,12 @@ export default function ShareCardView({
     );
   }
 
-  const imageUrl = Array.isArray(prediction.output) && prediction.output.length > 1
-    ? prediction.output[1]
-    : prediction.output;
+  if (!prediction?.output) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col items-center">
-      {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
           Shared Birthday Card
@@ -134,18 +132,15 @@ export default function ShareCardView({
         </p>
       </div>
 
-      {/* Card Image */}
       <div className="relative group w-full max-w-2xl mb-8">
         <img
-          src={imageUrl}
+          src={prediction.output}
           alt="Birthday Card"
           className="w-full rounded-lg shadow-lg"
         />
       </div>
 
-      {/* Action Buttons */}
       <div className="flex flex-col items-center gap-4 w-full max-w-md">
-        {/* Download Button */}
         <Button
           color="primary"
           size="lg"
@@ -156,7 +151,6 @@ export default function ShareCardView({
           Download Card
         </Button>
 
-        {/* Copy Link Button */}
         <Button
           variant="flat"
           size="lg"
@@ -167,7 +161,6 @@ export default function ShareCardView({
           Copy Link
         </Button>
 
-        {/* Social Share Buttons */}
         <div className="flex gap-3 mt-2">
           <Button
             size="lg"
@@ -198,7 +191,6 @@ export default function ShareCardView({
           </Button>
         </div>
 
-        {/* Create Your Own CTA */}
         <div className="mt-8 text-center">
           <p className="text-gray-600 mb-3">Want to create your own?</p>
           <Link href="/">

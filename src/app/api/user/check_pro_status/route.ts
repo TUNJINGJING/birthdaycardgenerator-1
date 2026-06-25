@@ -1,18 +1,21 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/backend/auth/options";
 import { checkUserHasSuccessfulPayment } from "@/backend/service/payment_history";
+import { User } from "@/backend/type/type";
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    const { user_id } = await request.json();
-
-    if (!user_id) {
-      return Response.json({ error: "user_id is required" }, { status: 400 });
+    const session = await getServerSession(authOptions);
+    const user = session?.user as User | undefined;
+    if (!user?.uuid) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const hasSuccessfulPayment = await checkUserHasSuccessfulPayment(user_id);
+    const hasSuccessfulPayment = await checkUserHasSuccessfulPayment(user.uuid);
 
     return Response.json({
       isPro: hasSuccessfulPayment,
-      user_id,
+      user_id: user.uuid,
     });
   } catch (error) {
     console.error("Error checking pro status:", error);
